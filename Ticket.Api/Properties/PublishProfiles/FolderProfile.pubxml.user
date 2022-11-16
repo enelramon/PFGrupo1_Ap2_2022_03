@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Trabajos\Programacion\Aplicada2_PF\PFGrupo1_Ap2_2022_03\Ticket.Api\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2022-11-16T09:45:38.5507254Z;True|2022-11-16T05:38:41.4645340-04:00;True|2022-11-16T05:14:22.7594254-04:00;</History>
+    <LastFailureDetails />
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="ConStr">
+      <Value>data source = DATA/TicketsDB.db</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
