@@ -10,9 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContext<TicketDbContext>(options =>
-    options.UseSqlServer(connectionString)
+    options.UseSqlite(builder.Configuration.GetConnectionString("ConStr"))
     );
 
 var app = builder.Build();
@@ -20,10 +19,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    
 }
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

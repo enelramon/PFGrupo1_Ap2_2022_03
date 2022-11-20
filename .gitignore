@@ -3,6 +3,8 @@
 ################################################################################
 
 /Ticket.Api/bin/**
+/Ticket.Api/vs/**
 /Ticket.ApiTests/obj/**
 /Ticket.Api/obj/**
 /.vs/GestionTickets/v17/**
+/.vs/GestionTickets/DesignTimeBuild/**
