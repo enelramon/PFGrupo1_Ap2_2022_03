@@ -2,7 +2,7 @@ package com.ucne.ticketsapp.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.ucne.ticketsapp.data.remote.TicketsApi
+import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
