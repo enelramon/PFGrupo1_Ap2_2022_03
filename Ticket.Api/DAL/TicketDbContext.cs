@@ -8,10 +8,7 @@ namespace Ticket.Api.DAL;
 public partial class TicketDbContext : DbContext
 {
 
-    public TicketDbContext(DbContextOptions<TicketDbContext> options)
-        : base(options)
-    {
-    }
+    public TicketDbContext(DbContextOptions<TicketDbContext> options): base(options){}
 
     public virtual DbSet<Clientes> Clientes { get; set; }
 
@@ -24,7 +21,7 @@ public partial class TicketDbContext : DbContext
     public virtual DbSet<Sistemas> Sistemas { get; set; }
 
     public virtual DbSet<Tipos> Tipos { get; set; }
- 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Clientes>(entity =>
