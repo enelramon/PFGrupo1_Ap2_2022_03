@@ -12,16 +12,18 @@ namespace Ticket.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Clientes",
+                name: "Configuraciones",
                 columns: table => new
                 {
-                    ClienteId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ConfiguracionId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Nombres = table.Column<string>(type: "TEXT", unicode: false, maxLength: 100, nullable: true)
+                    Theme = table.Column<int>(type: "INTEGER", nullable: false),
+                    ColorSchemeIndex = table.Column<int>(type: "INTEGER", nullable: false),
+                    RecordarEnDispositivo = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Clientes__71ABD087B375C419", x => x.ClienteId);
+                    table.PrimaryKey("PK_Configuraciones", x => x.ConfiguracionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,12 +79,33 @@ namespace Ticket.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    ClienteId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombres = table.Column<string>(type: "TEXT", unicode: false, maxLength: 100, nullable: true),
+                    Clave = table.Column<string>(type: "TEXT", nullable: true),
+                    ConfiguracionId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Clientes__71ABD087B375C419", x => x.ClienteId);
+                    table.ForeignKey(
+                        name: "FK_Clientes_Configuraciones_ConfiguracionId",
+                        column: x => x.ConfiguracionId,
+                        principalTable: "Configuraciones",
+                        principalColumn: "ConfiguracionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "eTicket",
                 columns: table => new
                 {
                     TicketId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Fecha = table.Column<DateTime>(type: "datetime", nullable: true),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime", nullable: true),
                     ClienteId = table.Column<int>(type: "INTEGER", nullable: true),
                     SistemaId = table.Column<int>(type: "INTEGER", nullable: true),
                     TipoId = table.Column<int>(type: "INTEGER", nullable: true),
@@ -122,6 +145,37 @@ namespace Ticket.Api.Migrations
                         principalColumn: "TipoId");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Respuestas",
+                columns: table => new
+                {
+                    RespuestaId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Respuesta = table.Column<string>(type: "TEXT", nullable: true),
+                    ClienteId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    TicketId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Respuestas", x => x.RespuestaId);
+                    table.ForeignKey(
+                        name: "FK_Respuestas_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId");
+                    table.ForeignKey(
+                        name: "FK_Respuestas_eTicket_TicketId",
+                        column: x => x.TicketId,
+                        principalTable: "eTicket",
+                        principalColumn: "TicketId");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clientes_ConfiguracionId",
+                table: "Clientes",
+                column: "ConfiguracionId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_eTicket_ClienteId",
                 table: "eTicket",
@@ -146,11 +200,24 @@ namespace Ticket.Api.Migrations
                 name: "IX_eTicket_TipoId",
                 table: "eTicket",
                 column: "TipoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Respuestas_ClienteId",
+                table: "Respuestas",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Respuestas_TicketId",
+                table: "Respuestas",
+                column: "TicketId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Respuestas");
+
             migrationBuilder.DropTable(
                 name: "eTicket");
 
@@ -168,6 +235,9 @@ namespace Ticket.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tipos");
+
+            migrationBuilder.DropTable(
+                name: "Configuraciones");
         }
     }
 }

@@ -11,7 +11,7 @@ using Ticket.Api.DAL;
 namespace Ticket.Api.Migrations
 {
     [DbContext(typeof(TicketDbContext))]
-    [Migration("20221116090528_inicial")]
+    [Migration("20221121105813_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -26,6 +26,12 @@ namespace Ticket.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ConfiguracionId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Nombres")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -34,7 +40,29 @@ namespace Ticket.Api.Migrations
                     b.HasKey("ClienteId")
                         .HasName("PK__Clientes__71ABD087B375C419");
 
+                    b.HasIndex("ConfiguracionId");
+
                     b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Configuraciones", b =>
+                {
+                    b.Property<int>("ConfiguracionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ColorSchemeIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("RecordarEnDispositivo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Theme")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ConfiguracionId");
+
+                    b.ToTable("Configuraciones");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Estatus", b =>
@@ -72,13 +100,40 @@ namespace Ticket.Api.Migrations
                     b.ToTable("Prioridades");
                 });
 
+            modelBuilder.Entity("Ticket.Api.Models.Respuestas", b =>
+                {
+                    b.Property<int>("RespuestaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClienteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Respuesta")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RespuestaId");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("Respuestas");
+                });
+
             modelBuilder.Entity("Ticket.Api.Models.Sistemas", b =>
                 {
                     b.Property<int>("SistemaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Sistema1")
+                    b.Property<string>("Sistema")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("TEXT")
@@ -106,7 +161,7 @@ namespace Ticket.Api.Migrations
                     b.Property<int?>("EstatusId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Fecha")
+                    b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("FechaFinalizado")
@@ -146,7 +201,7 @@ namespace Ticket.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Tipo1")
+                    b.Property<string>("Tipo")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("TEXT")
@@ -158,6 +213,32 @@ namespace Ticket.Api.Migrations
                     b.ToTable("Tipos");
                 });
 
+            modelBuilder.Entity("Ticket.Api.Models.Clientes", b =>
+                {
+                    b.HasOne("Ticket.Api.Models.Configuraciones", "Configuracion")
+                        .WithMany()
+                        .HasForeignKey("ConfiguracionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Configuracion");
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Respuestas", b =>
+                {
+                    b.HasOne("Ticket.Api.Models.Clientes", "cliente")
+                        .WithMany("Respuestas")
+                        .HasForeignKey("ClienteId");
+
+                    b.HasOne("Ticket.Api.Models.Tickets", "Ticket")
+                        .WithMany("Respuestas")
+                        .HasForeignKey("TicketId");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("cliente");
+                });
+
             modelBuilder.Entity("Ticket.Api.Models.Tickets", b =>
                 {
                     b.HasOne("Ticket.Api.Models.Clientes", "Cliente")
@@ -166,22 +247,22 @@ namespace Ticket.Api.Migrations
                         .HasConstraintName("FK__eTicket__Cliente__1CF15040");
 
                     b.HasOne("Ticket.Api.Models.Estatus", "Estatus")
-                        .WithMany("ETickets")
+                        .WithMany("Tickets")
                         .HasForeignKey("EstatusId")
                         .HasConstraintName("FK__eTicket__Estatus__20C1E124");
 
                     b.HasOne("Ticket.Api.Models.Prioridades", "Prioridad")
-                        .WithMany("ETickets")
+                        .WithMany("Tickets")
                         .HasForeignKey("PrioridadId")
                         .HasConstraintName("FK__eTicket__Priorid__1FCDBCEB");
 
                     b.HasOne("Ticket.Api.Models.Sistemas", "Sistema")
-                        .WithMany("ETickets")
+                        .WithMany("Tickets")
                         .HasForeignKey("SistemaId")
                         .HasConstraintName("FK__eTicket__Sistema__1DE57479");
 
                     b.HasOne("Ticket.Api.Models.Tipos", "Tipo")
-                        .WithMany("ETickets")
+                        .WithMany("Tickets")
                         .HasForeignKey("TipoId")
                         .HasConstraintName("FK__eTicket__TipoId__1ED998B2");
 
@@ -198,27 +279,34 @@ namespace Ticket.Api.Migrations
 
             modelBuilder.Entity("Ticket.Api.Models.Clientes", b =>
                 {
+                    b.Navigation("Respuestas");
+
                     b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Estatus", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Prioridades", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Sistemas", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Tickets", b =>
+                {
+                    b.Navigation("Respuestas");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Tipos", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

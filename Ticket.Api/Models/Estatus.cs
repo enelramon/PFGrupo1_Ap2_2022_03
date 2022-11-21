@@ -9,5 +9,5 @@ public partial class Estatus
 
     public string? Estatus1 { get; set; }
 
-    public virtual ICollection<Tickets> ETickets { get; } = new List<Tickets>();
+    public virtual ICollection<Tickets> Tickets { get; } = new List<Tickets>();
 }
