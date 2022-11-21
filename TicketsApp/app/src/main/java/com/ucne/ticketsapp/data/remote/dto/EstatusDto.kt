@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 data class EstatusDto(
     val estatusId : Int,
     val estatus1 : String,
-    val eTickets: List<TicketsDto>
+    val tickets: List<TicketsDto>
 )

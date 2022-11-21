@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class TicketsDto(
     val ticketId: Int,
-    val fecha: String,
+    val fechaCreacion: String,
     val clienteId: Int,
     val sistemaId: Int,
     val tipoId: Int,
@@ -15,6 +15,7 @@ data class TicketsDto(
     val fechaFinalizado: String,
     val orden: Int,
     val cliente: ClienteDto,
+    val respuestas: List<RespuestaDto>,
     val estatus: EstatusDto,
     val prioridad: PrioridadesDto,
     val sistema: SistemaDto,
