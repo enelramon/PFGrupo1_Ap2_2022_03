@@ -1,14 +1,14 @@
 package com.ucne.ticketsapp.data.repository
 
-import com.ucne.ticketsapp.data.remote.api.ClientesApi
+import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import retrofit2.Response
 import javax.inject.Inject
 
 class ClientesRepository @Inject constructor(
-    private val api: ClientesApi
+    private val api: TicketsApi
 ) {
-    suspend fun getClientes(): Response<List<ClienteDto>> {
+    suspend fun getClientes(): List<ClienteDto> {
         try {
             return api.getClientes()
         } catch (e: Exception) {
@@ -30,6 +30,15 @@ class ClientesRepository @Inject constructor(
         } catch (e: Exception) {
             throw e
         }
+    }
+
+    suspend fun getCliente(nombre: String, clave: String): ClienteDto? {
+        try {
+            return api.getCliente(nombre, clave)
+        } catch (_: Exception) {
+
+        }
+        return null
     }
 
     //PUT

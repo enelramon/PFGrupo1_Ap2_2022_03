@@ -1,14 +1,14 @@
 package com.ucne.ticketsapp.data.repository
 
-import com.ucne.ticketsapp.data.remote.api.PrioridadesApi
+import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import com.ucne.ticketsapp.data.remote.dto.PrioridadesDto
 import retrofit2.Response
 import javax.inject.Inject
 
 class PrioridadesRepository @Inject constructor(
-    private val api: PrioridadesApi
+    private val api: TicketsApi
 ) {
-    suspend fun getPrioridades(): Response<List<PrioridadesDto>> {
+    suspend fun getPrioridades(): List<PrioridadesDto> {
         try {
             return api.getPrioridades()
         } catch (e: Exception) {

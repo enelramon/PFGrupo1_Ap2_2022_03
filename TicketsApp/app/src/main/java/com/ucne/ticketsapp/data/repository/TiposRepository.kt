@@ -1,12 +1,12 @@
 package com.ucne.ticketsapp.data.repository
 
-import com.ucne.ticketsapp.data.remote.api.TiposApi
+import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import com.ucne.ticketsapp.data.remote.dto.TiposDto
 import retrofit2.Response
 import javax.inject.Inject
 
 class TiposRepository @Inject constructor(
-    private val api: TiposApi
+    private val api: TicketsApi
 ) {
     suspend fun getTipos(): Response<List<TiposDto>> {
         try {

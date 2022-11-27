@@ -1,12 +1,12 @@
 package com.ucne.ticketsapp.data.repository
 
-import com.ucne.ticketsapp.data.remote.api.EstatusApi
+import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import com.ucne.ticketsapp.data.remote.dto.EstatusDto
 import retrofit2.Response
 import javax.inject.Inject
 
 class EstatusRepository @Inject constructor(
-    private val api: EstatusApi
+    private val api: TicketsApi
 ) {
     suspend fun getEstatus(): Response<List<EstatusDto>> {
         try {

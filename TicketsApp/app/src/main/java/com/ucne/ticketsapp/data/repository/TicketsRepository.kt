@@ -8,7 +8,7 @@ import javax.inject.Inject
 class TicketsRepository @Inject constructor(
     private val api: TicketsApi
 ) {
-    suspend fun getTickets(): Response<List<TicketsDto>> {
+    suspend fun getTickets(): List<TicketsDto> {
         try {
             return api.getTickets()
         } catch (e: Exception) {
