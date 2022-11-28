@@ -2,7 +2,6 @@ package com.ucne.ticketsapp.ui.login
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -27,6 +26,7 @@ import com.ucne.ticketsapp.R
 import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.util.NoConnectionDialog
 import com.ucne.ticketsapp.util.haveNetwork
+import com.ucne.ticketsapp.util.noRippleClickable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -63,7 +63,7 @@ fun LoginScreen(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .padding(vertical = 20.dp)
-                    .clickable {
+                    .noRippleClickable {
                         if (!uiState.value.adminMode)
                             clicksCounter++
                         if (clicksCounter <= 9 && !uiState.value.adminMode) {
@@ -76,7 +76,7 @@ fun LoginScreen(
                                             duration = SnackbarDuration.Indefinite,
                                         )
                                     }
-                                    delay(750)
+                                    delay(700)
                                     job.cancel()
                                 }
                             }
@@ -89,7 +89,7 @@ fun LoginScreen(
                                         duration = SnackbarDuration.Indefinite,
                                     )
                                 }
-                                delay(750)
+                                delay(700)
                                 job.cancel()
                             }
                         } else {
@@ -100,7 +100,7 @@ fun LoginScreen(
                                         duration = SnackbarDuration.Indefinite,
                                     )
                                 }
-                                delay(750)
+                                delay(700)
                                 job.cancel()
                             }
                         }
@@ -179,7 +179,7 @@ fun LoginScreen(
                         if (viewModel.login() == null) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "No se pudo logear"
+                                    "No se pudo logear. Por favor revise sus credenciales."
                                 )
                             }
                         } else {

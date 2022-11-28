@@ -9,3 +9,12 @@ val filtrosTickets = listOf(
     "Orden",
     "Tipo"
 )
+val filtrosClientes = listOf(
+    "ID",
+    "Nombres"
+)
+val filtrosSistemas = listOf(
+    "ID",
+    "Sistema"
+)
+

@@ -32,6 +32,14 @@ class RemoteConfigRepository @Inject constructor(
         }
     }
 
+    suspend fun getConfigByConfig(theme: Int, colorIndex: Int): ConfiguracionesDto? {
+        try {
+            return api.getConfig(theme, colorIndex)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
 
     //PUT
     suspend fun updateConfig(id: Int, newConfig: ConfiguracionesDto): Response<ConfiguracionesDto> {

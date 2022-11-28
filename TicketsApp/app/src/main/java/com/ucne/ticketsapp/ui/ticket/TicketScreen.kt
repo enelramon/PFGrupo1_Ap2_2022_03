@@ -1,5 +1,7 @@
 package com.ucne.ticketsapp.ui.ticket
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -17,12 +19,15 @@ import com.ucne.ticketsapp.ui.components.CustomDatePickerDialog
 import com.ucne.ticketsapp.util.noRippleClickable
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TicketScreen(
     editMode: Boolean = false,
+    clienteId: Int,
     onPressCancel: () -> Unit,
     viewModel: TicketViewModel = hiltViewModel()
 ) {
+    viewModel.setCliente(clienteId)
     val uiState = viewModel.ticketsUiState.collectAsState()
     val sistemas = viewModel.sistemaListUiState.collectAsState()
     val prioridades = viewModel.prioridadesListUiState.collectAsState()
@@ -59,6 +64,11 @@ fun TicketScreen(
                 OutlinedTextField(
                     label = { Text("Sistema") },
                     value = uiState.value.sistema,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        disabledBorderColor = Color(
+                            0xFF7A7A7A
+                        )
+                    ),
                     enabled = false, readOnly = true,
                     trailingIcon = {
                         Icon(
@@ -88,8 +98,7 @@ fun TicketScreen(
                             text = {
                                 Text(
                                     text = sistema.sistema,
-                                    textAlign = TextAlign.Center,
-                                    color = Color.White
+                                    textAlign = TextAlign.Center
                                 )
                             },
                             onClick = {
@@ -106,6 +115,11 @@ fun TicketScreen(
                 OutlinedTextField(
                     label = { Text("Tipo") },
                     value = uiState.value.tipo,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        disabledBorderColor = Color(
+                            0xFF7A7A7A
+                        )
+                    ),
                     enabled = false, readOnly = true,
                     trailingIcon = {
                         Icon(
@@ -135,8 +149,7 @@ fun TicketScreen(
                             text = {
                                 Text(
                                     text = it.tipo,
-                                    textAlign = TextAlign.Center,
-                                    color = Color.White
+                                    textAlign = TextAlign.Center
                                 )
                             },
                             onClick = {
@@ -154,7 +167,12 @@ fun TicketScreen(
                 if (editMode) {
                     OutlinedTextField(
                         label = { Text("Fecha") },
-                        value = uiState.value.sistema,
+                        value = uiState.value.fecha,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            disabledBorderColor = Color(
+                                0xFF7A7A7A
+                            )
+                        ),
                         enabled = false, readOnly = true,
                         trailingIcon = {
                             Icon(
@@ -175,6 +193,11 @@ fun TicketScreen(
                 OutlinedTextField(
                     label = { Text("Prioridad") },
                     value = uiState.value.prioridad,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        disabledBorderColor = Color(
+                            0xFF7A7A7A
+                        )
+                    ),
                     enabled = false, readOnly = true,
                     trailingIcon = {
                         Icon(
@@ -204,12 +227,11 @@ fun TicketScreen(
                             text = {
                                 Text(
                                     text = it.prioridad,
-                                    textAlign = TextAlign.Center,
-                                    color = Color.White
+                                    textAlign = TextAlign.Center
                                 )
                             },
                             onClick = {
-                                tipoExpanded = false
+                                prioridadExpanded = false
                                 viewModel.setPrioridad(it.prioridadId)
                             },
                             modifier = Modifier
@@ -237,23 +259,18 @@ fun TicketScreen(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
-                onClick = onPressCancel,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFDC3939),
-                    contentColor = Color.White
-                )
+            OutlinedButton(
+                onClick = onPressCancel
             ) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "Cancelar")
                 Text(text = "Cancelar")
             }
 
             Button(
-                onClick = { /*Guardo*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF5CDC5A),
-                    contentColor = Color.White
-                )
+                onClick = {
+                    viewModel.save()
+                    onPressCancel()
+                }
             ) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = "Aceptar")
                 Text(text = "Aceptar")

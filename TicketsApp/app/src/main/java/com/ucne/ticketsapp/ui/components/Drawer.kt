@@ -1,6 +1,5 @@
 package com.ucne.ticketsapp.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -12,15 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.ucne.ticketsapp.data.remote.dto.ClienteDto
-import com.ucne.ticketsapp.util.Screen
+import com.ucne.ticketsapp.util.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDrawer(
     user: ClienteDto, isAdminMode: Boolean,
-    navHost: NavHostController,
+    navToHome: () -> Unit,
+    navToTickets: () -> Unit,
+    navToClientes: () -> Unit,
+    navToLogin: () -> Unit,
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
@@ -58,11 +59,13 @@ fun CustomDrawer(
                         }
                     }
 
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
-                        .clickable { }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
+                            .noRippleClickable(navToHome)
+                    ) {
                         Row(modifier = Modifier.padding(10.dp)) {
                             Icon(imageVector = Icons.Default.Home, contentDescription = null)
                             Text(
@@ -73,11 +76,13 @@ fun CustomDrawer(
                         }
                     }
 
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
-                        .clickable { }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
+                            .noRippleClickable(navToTickets)
+                    ) {
                         Row(modifier = Modifier.padding(10.dp)) {
                             Icon(imageVector = Icons.Default.Sell, contentDescription = null)
                             Text(
@@ -86,45 +91,20 @@ fun CustomDrawer(
                                 modifier = Modifier.padding(start = 10.dp)
                             )
                         }
-                    }
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
-                        .clickable { }) {
-                        Row(modifier = Modifier.padding(10.dp)) {
-                            Icon(imageVector = Icons.Default.AddBox, contentDescription = null)
-                            Text(
-                                text = "Nuevo Ticket",
-                                style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier.padding(start = 10.dp)
-                            )
-                        }
+
                     }
                     if (isAdminMode) {
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
-                            .clickable { }) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
+                                .noRippleClickable(navToClientes)
+                        ) {
                             Row(modifier = Modifier.padding(10.dp)) {
                                 Icon(imageVector = Icons.Default.Person, contentDescription = null)
                                 Text(
                                     text = "Clientes",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    modifier = Modifier.padding(start = 10.dp)
-                                )
-                            }
-                        }
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
-                            .clickable { }) {
-                            Row(modifier = Modifier.padding(10.dp)) {
-                                Icon(imageVector = Icons.Default.AddBox, contentDescription = null)
-                                Text(
-                                    text = "Nuevo Cliente",
                                     style = MaterialTheme.typography.labelLarge,
                                     modifier = Modifier.padding(start = 10.dp)
                                 )
@@ -137,7 +117,7 @@ fun CustomDrawer(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 16.dp)
                         .clip(shape = AbsoluteRoundedCornerShape(size = 16.dp))
-                        .clickable { navHost.navigate(Screen.LoginScreen.ruta) },
+                        .noRippleClickable(navToLogin),
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -154,5 +134,4 @@ fun CustomDrawer(
         },
         content = content
     )
-
 }

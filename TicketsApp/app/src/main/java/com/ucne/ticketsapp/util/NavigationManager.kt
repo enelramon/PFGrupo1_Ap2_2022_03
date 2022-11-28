@@ -1,5 +1,7 @@
 package com.ucne.ticketsapp.util
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -11,6 +13,7 @@ import com.ucne.ticketsapp.ui.MainLayout
 import com.ucne.ticketsapp.ui.login.LoginScreen
 import com.ucne.ticketsapp.ui.ticket.TicketScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationManager(
     navController: NavHostController,
@@ -20,7 +23,9 @@ fun NavigationManager(
         alphaAnimation.animateTo(1f)
     }
     var userLogeado: ClienteDto? = null
+    remember { userLogeado }
     var inAdminMode = false
+    remember { inAdminMode }
 
     NavHost(
         navController = navController,
@@ -42,7 +47,11 @@ fun NavigationManager(
 
         //Ticket Screen
         composable(Screen.TicketScreen.ruta) {
-            TicketScreen(editMode = false, onPressCancel = { navController.navigateUp() })
+            TicketScreen(
+                editMode = false,
+                onPressCancel = { navController.navigateUp() },
+                clienteId = userLogeado!!.clienteId
+            )
         }
     }
 }

@@ -43,7 +43,7 @@ interface TicketsApi {
 
 
     @GET("api/Tipos")
-    suspend fun getTipos(): Response<List<TiposDto>>
+    suspend fun getTipos(): List<TiposDto>
 
     @POST("api/Tipos")
     suspend fun postTipos(@Body tipo: TiposDto): Response<TiposDto>
@@ -104,6 +104,12 @@ interface TicketsApi {
 
     @GET("api/Configuraciones/{id}")
     suspend fun getConfigById(@Path("id") id: Int): ConfiguracionesDto?
+
+    @GET("api/Configuraciones/{theme},{colorIndex}")
+    suspend fun getConfig(
+        @Path("theme") theme: Int,
+        @Path("colorIndex") colorIndex: Int
+    ): ConfiguracionesDto?
 
     @PUT("api/Configuraciones/{id}")
     suspend fun updateConfig(

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.ucne.ticketsapp.util.noRippleClickable
 
 @Composable
@@ -34,45 +35,45 @@ fun TopBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = title)
-                    if (filtros != null) {
-                        IconButton(onClick = { showFilters = true }) {
-                            Icon(imageVector = Icons.Default.FilterAlt, contentDescription = null)
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (filtros != null) {
+                            IconButton(onClick = { showFilters = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.FilterAlt,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                        IconButton(
+                            onClick = onShowMenu,
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
                         }
                     }
-                    IconButton(
-                        onClick = onShowMenu,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    ) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = null)
-                    }
+
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         )
         if (showFilters) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp)
-                    )
-                    .padding(horizontal = 10.dp)
+            FiltrosDialog(
+                filtros = filtros!!,
+                onFilterSelected = {
+                    onFilterSelected!!
+                    filterSelected = it
+                },
+                filterSelected = filterSelected
             ) {
-                FiltrosDialog(
-                    filtros = filtros!!,
-                    onFilterSelected = {
-                        onFilterSelected!!
-                        filterSelected = it
-                    },
-                    filterSelected = filterSelected
-                ) {
-                    showFilters = false
-                }
+                showFilters = false
             }
         }
-
     }
 }
+
 
 @Composable
 private fun FiltrosDialog(
@@ -81,30 +82,40 @@ private fun FiltrosDialog(
     onFilterSelected: (Int) -> Unit,
     onDimissRequest: () -> Unit
 ) {
-    Column() {
-        Text(
-            text = "Filtros",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
+    Dialog(onDismissRequest = {}) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 5.dp)
-        )
-        for (i in filtros.indices) {
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(horizontal = 10.dp)
+        ) {
             Text(
-                text = filtros[i],
+                text = "Filtros",
                 textAlign = TextAlign.Center,
-                textDecoration = if (i == filterSelected) TextDecoration.Underline else null,
-                fontWeight = if (i == filterSelected) FontWeight.Bold else null,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(2.dp)
-                    .noRippleClickable {
-                        onFilterSelected(i)
-                        onDimissRequest()
-                    }
+                    .padding(vertical = 5.dp)
             )
+            for (i in filtros.indices) {
+                Text(
+                    text = filtros[i],
+                    textAlign = TextAlign.Center,
+                    textDecoration = if (i == filterSelected) TextDecoration.Underline else null,
+                    fontWeight = if (i == filterSelected) FontWeight.Bold else null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(2.dp)
+                        .noRippleClickable {
+                            onFilterSelected(i)
+                            onDimissRequest()
+                        }
+                )
+            }
         }
     }
+
 }

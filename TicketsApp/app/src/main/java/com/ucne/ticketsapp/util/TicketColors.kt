@@ -25,10 +25,10 @@ fun getTicketColors(ticket: TicketsDto): TicketColors {
         else -> Color(0xFFEB3737)//Emergencia
     }
     val estatusColor: Color = when (ticket.estatusId) {
-        1 -> Color(0xFF6AE751)//Nuevo
-        2 -> Color(0xFFDBEB37)//En Proceso
+        1 -> Color(0xFF8DC981)//Nuevo
+        2 -> Color(0xFFC9CF8B)//En Proceso
         3 -> Color(0xFF8B8B8B)//Cerrado
-        else -> Color(0xFF03A9F4) //Respondido
+        else -> Color(0xFF81CDF0) //Respondido
     }
 
     return TicketColors(

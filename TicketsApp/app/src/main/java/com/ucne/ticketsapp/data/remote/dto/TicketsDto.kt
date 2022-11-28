@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TicketsDto(
-    val ticketId: Int,
+    val ticketId: Int = 0,
     val fechaCreacion: String,
     val clienteId: Int,
     val sistemaId: Int,

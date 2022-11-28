@@ -6,7 +6,11 @@ import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.data.remote.dto.ConfiguracionesDto
 import com.ucne.ticketsapp.data.remote.dto.RespuestaDto
 import com.ucne.ticketsapp.data.remote.dto.TicketsDto
-import com.ucne.ticketsapp.data.repository.*
+import com.ucne.ticketsapp.data.repository.ClientesRepository
+import com.ucne.ticketsapp.data.repository.RemoteConfigRepository
+import com.ucne.ticketsapp.data.repository.SistemasRepository
+import com.ucne.ticketsapp.data.repository.TicketsRepository
+import com.ucne.ticketsapp.util.UserConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +30,10 @@ data class TicketListUiState(
 
 data class ClientesListUiState(
     val list: List<ClienteDto> = emptyList()
+)
+
+data class ConfigUiState(
+    val currentConfig: UserConfig = UserConfig()
 )
 
 
@@ -61,11 +69,7 @@ class MainViewModel @Inject constructor(
     private val clientRepository: ClientesRepository,
     private val ticketsRepository: TicketsRepository,
     private val sistemaRepository: SistemasRepository,
-    private val prioridadesRepository: PrioridadesRepository,
-    private val tipoRepository: TiposRepository,
-    private val estatusRepository: EstatusRepository,
     private val configRepository: RemoteConfigRepository,
-    private val LocalConfigRepository: LocalConfiguracionRepository,
 ) : ViewModel() {
 
     var profileUiState = MutableStateFlow(ProfileUiState())
@@ -73,6 +77,8 @@ class MainViewModel @Inject constructor(
     var clientUiState = MutableStateFlow(ClienteUiState())
         private set
 
+    var configUiState = MutableStateFlow(ConfigUiState())
+        private set
 
     private val listTicketUiState = MutableStateFlow(TicketListUiState())
     val ticketListUiState: StateFlow<TicketListUiState> = listTicketUiState.asStateFlow()
@@ -80,9 +86,7 @@ class MainViewModel @Inject constructor(
     private val listClienteUiState = MutableStateFlow(ClientesListUiState())
     val clienteListUiState: StateFlow<ClientesListUiState> = listClienteUiState.asStateFlow()
 
-
     init {
-
         viewModelScope.launch {
             listTicketUiState.update {
                 it.copy(list = ticketsRepository.getTickets())
@@ -94,16 +98,29 @@ class MainViewModel @Inject constructor(
     }
 
     fun setCliente(user: ClienteDto) {
-        clientUiState.value = clientUiState.value.copy(
-            clienteId = user.clienteId,
-            nombres = user.nombres,
-            configuracionId = user.configuracionId,
-            configuracion = user.configuracion,
-            tickets = user.tickets,
-            respuestas = user.respuestas
-        )
-    }
+        viewModelScope.launch {
+            clientRepository.getClientesById(user.clienteId)?.let {
+                clientUiState.value = clientUiState.value.copy(
+                    clienteId = it.clienteId,
+                    nombres = it.nombres,
+                    configuracionId = it.configuracionId,
+                    configuracion = it.configuracion,
+                    tickets = it.tickets,
+                    respuestas = it.respuestas
+                )
+            }
 
+            val config = configRepository.getConfig(clientUiState.value.configuracionId)
+            if (config != null) {
+                configUiState.value = configUiState.value.copy(
+                    currentConfig = UserConfig(config.theme, config.colorSchemeIndex)
+                )
+                setProfileTheme(config.theme)
+                setProfileColor(config.colorSchemeIndex)
+            }
+        }
+
+    }
 
     fun setProfileTheme(index: Int) {
         profileUiState.value = profileUiState.value.copy(
@@ -120,31 +137,29 @@ class MainViewModel @Inject constructor(
     fun saveProfile() {
         viewModelScope.launch {
             val clienteCopiar = clientRepository.getClientesById(clientUiState.value.clienteId)
+            val config = configRepository.getConfigByConfig(
+                profileUiState.value.themeIndex,
+                profileUiState.value.colorIndex
+            )
+            if (config != null) {
+                configUiState.value = configUiState.value.copy(
+                    currentConfig = UserConfig(config.theme, config.colorSchemeIndex)
+                )
+            }
             if (clienteCopiar != null) {
                 clientRepository.updateClientes(
                     id = clientUiState.value.clienteId,
-                    clienteCopiar
+                    ClienteDto(
+                        clienteId = clienteCopiar.clienteId,
+                        nombres = clienteCopiar.nombres,
+                        clave = clienteCopiar.clave,
+                        configuracionId = config!!.configuracionId,
+                        configuracion = config,
+                        tickets = clienteCopiar.tickets,
+                        respuestas = clienteCopiar.respuestas
+                    )
                 )
             }
         }
-    }
-
-
-    fun cleanCliente() {
-        clientUiState.value = clientUiState.value.copy(
-            clienteId = 0,
-            nombres = "",
-            configuracionId = 0,
-            configuracion = null,
-            tickets = null,
-            respuestas = null
-        )
-    }
-
-    fun cleanConfig() {
-        profileUiState.value = profileUiState.value.copy(
-            themeIndex = 0,
-            colorIndex = 0
-        )
     }
 }

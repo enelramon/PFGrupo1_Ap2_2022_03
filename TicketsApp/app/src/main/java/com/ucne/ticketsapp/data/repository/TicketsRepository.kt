@@ -1,5 +1,6 @@
 package com.ucne.ticketsapp.data.repository
 
+import android.util.Log
 import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import com.ucne.ticketsapp.data.remote.dto.TicketsDto
 import retrofit2.Response
@@ -20,6 +21,7 @@ class TicketsRepository @Inject constructor(
         try {
             return api.postTickets(ticketsDto)
         } catch (e: Exception) {
+            Log.i("Ticket", e.message!!)
             throw e
         }
     }

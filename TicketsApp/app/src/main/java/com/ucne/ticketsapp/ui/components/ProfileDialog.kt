@@ -101,26 +101,26 @@ fun ProfileDialog(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "Verde")
+                                Text(text = "Morado")
                                 RadioButton(
                                     selected = profileUiState.value.colorIndex == 0,
                                     onClick = { viewModel.setProfileColor(0) },
                                     colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFF4CAF50),
-                                        unselectedColor = Color(0xFF4CAF50)
+                                        selectedColor = Color(0xFFD0BCFF),
+                                        unselectedColor = Color(0xFFD0BCFF)
                                     ),
                                     modifier = Modifier.size(25.dp)
                                 )
                             }
 
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "Amarillo")
+                                Text(text = "Verde")
                                 RadioButton(
                                     selected = profileUiState.value.colorIndex == 1,
                                     onClick = { viewModel.setProfileColor(1) },
                                     colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFFFFEB3B),
-                                        unselectedColor = Color(0xFFFFEB3B)
+                                        selectedColor = Color(0xFF4CAF50),
+                                        unselectedColor = Color(0xFF4CAF50)
                                     ),
                                     modifier = Modifier.size(25.dp)
                                 )
@@ -150,23 +150,18 @@ fun ProfileDialog(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(
-                        onClick = { onCancelPress(lastSelectedModule) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFDC3939),
-                            contentColor = Color.White
-                        )
+                    OutlinedButton(
+                        onClick = { onCancelPress(lastSelectedModule) }
                     ) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = "Cancelar")
                         Text(text = "Cancelar")
                     }
 
                     Button(
-                        onClick = { /*Guardo*/ },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5CDC5A),
-                            contentColor = Color.White
-                        )
+                        onClick = {
+                            viewModel.saveProfile()
+                            onCancelPress(lastSelectedModule)
+                        }
                     ) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = "Aceptar")
                         Text(text = "Aceptar")

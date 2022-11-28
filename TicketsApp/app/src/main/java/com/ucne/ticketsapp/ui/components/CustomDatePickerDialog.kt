@@ -65,6 +65,7 @@ fun DatePickerUI(
 
             Button(
                 shape = RoundedCornerShape(5.dp),
+                enabled = dateValid(chosenYear.value, chosenMonth.value, chosenDay.value),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp),
@@ -114,6 +115,27 @@ fun DateSelectionSection(
             onItemSelected = onYearChosen
         )
     }
+}
+
+private fun esBisiesto(year: Int): Boolean {
+    return year % 4 == 0 && year % 100 != 0 || year % 400 == 0
+}
+
+private fun dateValid(year: Int, mes: Int, day: Int): Boolean {
+    if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) {
+        if (day in 1..31)
+            return true
+    } else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+        if (day in 1..30)
+            return true
+    } else if (mes == 2 && esBisiesto(year)) {
+        if (day in 1..29)
+            return true
+    } else if (mes == 2) {
+        if (day in 1..28)
+            return true
+    }
+    return false
 }
 
 @Composable

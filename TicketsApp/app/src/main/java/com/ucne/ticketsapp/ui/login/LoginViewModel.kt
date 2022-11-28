@@ -76,9 +76,7 @@ class LoginViewModel @Inject constructor(
                 userRepository.delete()
                 clean()
             }
-
         }
-
         return user
     }
 

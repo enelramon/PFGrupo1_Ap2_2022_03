@@ -8,7 +8,7 @@ import javax.inject.Inject
 class TiposRepository @Inject constructor(
     private val api: TicketsApi
 ) {
-    suspend fun getTipos(): Response<List<TiposDto>> {
+    suspend fun getTipos(): List<TiposDto> {
         try {
             return api.getTipos()
         } catch (e: Exception) {
