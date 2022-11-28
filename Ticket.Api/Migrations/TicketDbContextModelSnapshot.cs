@@ -51,9 +51,6 @@ namespace Ticket.Api.Migrations
                     b.Property<int>("ColorSchemeIndex")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("RecordarEnDispositivo")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Theme")
                         .HasColumnType("INTEGER");
 

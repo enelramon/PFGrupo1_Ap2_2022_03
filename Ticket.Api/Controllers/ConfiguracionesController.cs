@@ -42,6 +42,20 @@ namespace Ticket.Api.Controllers
             return configuraciones;
         }
 
+        // GET: api/Configuraciones/1,2
+        [HttpGet("{theme},{colorIndex}")]
+        public async Task<ActionResult<Configuraciones>> GetConfiguracion(int theme, int colorIndex)
+        {
+            var configuraciones = await _context.Configuraciones.FirstOrDefaultAsync(c => c.Theme==theme && c.ColorSchemeIndex==colorIndex);
+
+            if (configuraciones == null)
+            {
+                return NotFound();
+            }
+
+            return configuraciones;
+        }
+
         // PUT: api/Configuraciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
