@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Trabajos\Programacion\Aplicada2_PF\PFGrupo1_Ap2_2022_03\Ticket.Api\bin\Release\net6.0\publish\</_PublishTargetUrl>
-    <History>True|2022-11-28T00:42:43.7259087Z;True|2022-11-22T08:13:24.2694980-04:00;True|2022-11-21T12:07:06.5154084-04:00;True|2022-11-21T07:05:37.5262475-04:00;True|2022-11-21T06:39:41.3185360-04:00;True|2022-11-16T05:45:38.5507254-04:00;True|2022-11-16T05:38:41.4645340-04:00;True|2022-11-16T05:14:22.7594254-04:00;</History>
+    <History>True|2022-11-29T15:06:17.4002100Z;True|2022-11-27T20:42:43.7259087-04:00;True|2022-11-22T08:13:24.2694980-04:00;True|2022-11-21T12:07:06.5154084-04:00;True|2022-11-21T07:05:37.5262475-04:00;True|2022-11-21T06:39:41.3185360-04:00;True|2022-11-16T05:45:38.5507254-04:00;True|2022-11-16T05:38:41.4645340-04:00;True|2022-11-16T05:14:22.7594254-04:00;</History>
     <LastFailureDetails />
     <TimeStampOfAssociatedLegacyPublishXmlFile />
   </PropertyGroup>

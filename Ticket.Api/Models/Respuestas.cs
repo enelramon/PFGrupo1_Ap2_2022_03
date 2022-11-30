@@ -7,14 +7,9 @@ namespace Ticket.Api.Models
     {
         [Key]
         public int RespuestaId { get; set; }
-
         public string? Respuesta { get; set; }
-
         public int? ClienteId { get; set; }
-
-        public Clientes? cliente { get; set; }
         public DateTime? Fecha { get; set; }
         public int? TicketId { get; set; }
-        public virtual Tickets? Ticket { get; set; }
     }
 }

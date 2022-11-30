@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Ticket.Api.Migrations
 {
     /// <inheritdoc />
@@ -11,6 +13,21 @@ namespace Ticket.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    ClienteId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombres = table.Column<string>(type: "TEXT", unicode: false, maxLength: 100, nullable: true),
+                    Clave = table.Column<string>(type: "TEXT", nullable: true),
+                    ConfiguracionId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Clientes__71ABD087B375C419", x => x.ClienteId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Configuraciones",
                 columns: table => new
@@ -78,27 +95,6 @@ namespace Ticket.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clientes",
-                columns: table => new
-                {
-                    ClienteId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombres = table.Column<string>(type: "TEXT", unicode: false, maxLength: 100, nullable: true),
-                    Clave = table.Column<string>(type: "TEXT", nullable: true),
-                    ConfiguracionId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__Clientes__71ABD087B375C419", x => x.ClienteId);
-                    table.ForeignKey(
-                        name: "FK_Clientes_Configuraciones_ConfiguracionId",
-                        column: x => x.ConfiguracionId,
-                        principalTable: "Configuraciones",
-                        principalColumn: "ConfiguracionId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "eTicket",
                 columns: table => new
                 {
@@ -112,34 +108,38 @@ namespace Ticket.Api.Migrations
                     EstatusId = table.Column<int>(type: "INTEGER", nullable: true),
                     Especificaciones = table.Column<string>(type: "TEXT", unicode: false, nullable: true),
                     FechaFinalizado = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Orden = table.Column<int>(type: "INTEGER", nullable: true)
+                    Orden = table.Column<int>(type: "INTEGER", nullable: true),
+                    ClientesClienteId = table.Column<int>(type: "INTEGER", nullable: true),
+                    PrioridadesPrioridadId = table.Column<int>(type: "INTEGER", nullable: true),
+                    SistemasSistemaId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TiposTipoId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__eTicket__712CC6070A90FFD9", x => x.TicketId);
                     table.ForeignKey(
-                        name: "FK__eTicket__Cliente__1CF15040",
-                        column: x => x.ClienteId,
+                        name: "FK_eTicket_Clientes_ClientesClienteId",
+                        column: x => x.ClientesClienteId,
                         principalTable: "Clientes",
                         principalColumn: "ClienteId");
                     table.ForeignKey(
-                        name: "FK__eTicket__Estatus__20C1E124",
+                        name: "FK_eTicket_Estatus_EstatusId",
                         column: x => x.EstatusId,
                         principalTable: "Estatus",
                         principalColumn: "EstatusId");
                     table.ForeignKey(
-                        name: "FK__eTicket__Priorid__1FCDBCEB",
-                        column: x => x.PrioridadId,
+                        name: "FK_eTicket_Prioridades_PrioridadesPrioridadId",
+                        column: x => x.PrioridadesPrioridadId,
                         principalTable: "Prioridades",
                         principalColumn: "PrioridadId");
                     table.ForeignKey(
-                        name: "FK__eTicket__Sistema__1DE57479",
-                        column: x => x.SistemaId,
+                        name: "FK_eTicket_Sistemas_SistemasSistemaId",
+                        column: x => x.SistemasSistemaId,
                         principalTable: "Sistemas",
                         principalColumn: "SistemaId");
                     table.ForeignKey(
-                        name: "FK__eTicket__TipoId__1ED998B2",
-                        column: x => x.TipoId,
+                        name: "FK_eTicket_Tipos_TiposTipoId",
+                        column: x => x.TiposTipoId,
                         principalTable: "Tipos",
                         principalColumn: "TipoId");
                 });
@@ -153,32 +153,108 @@ namespace Ticket.Api.Migrations
                     Respuesta = table.Column<string>(type: "TEXT", nullable: true),
                     ClienteId = table.Column<int>(type: "INTEGER", nullable: true),
                     Fecha = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    TicketId = table.Column<int>(type: "INTEGER", nullable: true)
+                    TicketId = table.Column<int>(type: "INTEGER", nullable: true),
+                    ClientesClienteId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TicketsTicketId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Respuestas", x => x.RespuestaId);
                     table.ForeignKey(
-                        name: "FK_Respuestas_Clientes_ClienteId",
-                        column: x => x.ClienteId,
+                        name: "FK_Respuestas_Clientes_ClientesClienteId",
+                        column: x => x.ClientesClienteId,
                         principalTable: "Clientes",
                         principalColumn: "ClienteId");
                     table.ForeignKey(
-                        name: "FK_Respuestas_eTicket_TicketId",
-                        column: x => x.TicketId,
+                        name: "FK_Respuestas_eTicket_TicketsTicketId",
+                        column: x => x.TicketsTicketId,
                         principalTable: "eTicket",
                         principalColumn: "TicketId");
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Clientes_ConfiguracionId",
+            migrationBuilder.InsertData(
                 table: "Clientes",
-                column: "ConfiguracionId");
+                columns: new[] { "ClienteId", "Clave", "ConfiguracionId", "Nombres" },
+                values: new object[,]
+                {
+                    { 1, "Samuel23", 13, "Samuel" },
+                    { 2, "Rafa23", 13, "Rafa" },
+                    { 3, "Jeison23", 13, "Jeison" },
+                    { 4, "Enel23", 13, "Enel" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Configuraciones",
+                columns: new[] { "ConfiguracionId", "ColorSchemeIndex", "Theme" },
+                values: new object[,]
+                {
+                    { 1, 0, 0 },
+                    { 2, 1, 0 },
+                    { 3, 2, 0 },
+                    { 4, 3, 0 },
+                    { 5, 4, 0 },
+                    { 6, 5, 0 },
+                    { 7, 0, 1 },
+                    { 8, 1, 1 },
+                    { 9, 2, 1 },
+                    { 10, 3, 1 },
+                    { 11, 4, 1 },
+                    { 12, 5, 1 },
+                    { 13, 0, 2 },
+                    { 14, 1, 2 },
+                    { 15, 2, 2 },
+                    { 16, 3, 2 },
+                    { 17, 4, 2 },
+                    { 18, 5, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Estatus",
+                columns: new[] { "EstatusId", "Estatus" },
+                values: new object[,]
+                {
+                    { 1, "Nuevo" },
+                    { 2, "En proceso" },
+                    { 3, "Cerrado" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Prioridades",
+                columns: new[] { "PrioridadId", "Prioridad" },
+                values: new object[,]
+                {
+                    { 1, "Baja" },
+                    { 2, "Normal" },
+                    { 3, "Media" },
+                    { 4, "Alta" },
+                    { 5, "Emergencia" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Sistemas",
+                columns: new[] { "SistemaId", "Sistema" },
+                values: new object[,]
+                {
+                    { 1, "Ventas SS" },
+                    { 2, "SS Office" },
+                    { 3, "SS Rent Reporter" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tipos",
+                columns: new[] { "TipoId", "Tipo" },
+                values: new object[,]
+                {
+                    { 1, "Problemas" },
+                    { 2, "Sugerencia" },
+                    { 3, "Soporte Directo" },
+                    { 4, "Otros" }
+                });
 
             migrationBuilder.CreateIndex(
-                name: "IX_eTicket_ClienteId",
+                name: "IX_eTicket_ClientesClienteId",
                 table: "eTicket",
-                column: "ClienteId");
+                column: "ClientesClienteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_eTicket_EstatusId",
@@ -186,34 +262,37 @@ namespace Ticket.Api.Migrations
                 column: "EstatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_eTicket_PrioridadId",
+                name: "IX_eTicket_PrioridadesPrioridadId",
                 table: "eTicket",
-                column: "PrioridadId");
+                column: "PrioridadesPrioridadId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_eTicket_SistemaId",
+                name: "IX_eTicket_SistemasSistemaId",
                 table: "eTicket",
-                column: "SistemaId");
+                column: "SistemasSistemaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_eTicket_TipoId",
+                name: "IX_eTicket_TiposTipoId",
                 table: "eTicket",
-                column: "TipoId");
+                column: "TiposTipoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Respuestas_ClienteId",
+                name: "IX_Respuestas_ClientesClienteId",
                 table: "Respuestas",
-                column: "ClienteId");
+                column: "ClientesClienteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Respuestas_TicketId",
+                name: "IX_Respuestas_TicketsTicketId",
                 table: "Respuestas",
-                column: "TicketId");
+                column: "TicketsTicketId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Configuraciones");
+
             migrationBuilder.DropTable(
                 name: "Respuestas");
 
@@ -234,9 +313,6 @@ namespace Ticket.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tipos");
-
-            migrationBuilder.DropTable(
-                name: "Configuraciones");
         }
     }
 }

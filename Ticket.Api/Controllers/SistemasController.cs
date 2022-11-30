@@ -28,6 +28,16 @@ namespace Ticket.Api.Controllers
             return await _context.Sistemas.ToListAsync();
         }
 
+        // GET: api/Sistemas/list
+        [HttpGet("/MoreTickets")]
+        public async Task<ActionResult<IEnumerable<Sistemas>>> GetSistemasConMasTickets()
+        {
+            return await _context.Sistemas
+                .OrderBy(s => s.Tickets.Count())
+                .Take(5)
+                .ToListAsync();
+        }
+
         // GET: api/Sistemas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Sistemas>> GetSistemas(int id)

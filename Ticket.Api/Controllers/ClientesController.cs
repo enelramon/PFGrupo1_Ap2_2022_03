@@ -28,6 +28,43 @@ namespace Ticket.Api.Controllers
             return await _context.Clientes.ToListAsync();
         }
 
+        //Ellos a mi
+        // GET: api/Clientes/Top5Respondidos/2
+        [HttpGet("Top5Respondidos/{id}")]
+        public async Task<ActionResult<IEnumerable<Clientes>>> GetClientesRespondidos(int id)
+        {
+            var lista =  (
+                from c in _context.Clientes
+                join r in _context.Respuestas on c.ClienteId equals r.ClienteId
+                from t in _context.Tickets
+                where t.ClienteId == id && r.TicketId == t.TicketId 
+                orderby (c.Respuestas.Where(r2=>r2.TicketId==t.TicketId).Count())
+                select c
+                         )
+                         .Take(5)
+                         .ToListAsync();
+            return await lista;
+
+        }
+
+        // GET: api/Clientes/Top5ContestadosPorMi/2
+        [HttpGet("TopRespondidosPor_Mi/{id}")]
+        public async Task<ActionResult<IEnumerable<Clientes>>> GetClientesRespondidosPor_Mi(int id)
+        {
+            var lista = (
+                from c in _context.Clientes
+                join r in _context.Respuestas on id equals r.ClienteId 
+                from t in _context.Tickets
+                where t.ClienteId == c.ClienteId && r.TicketId == t.TicketId
+                orderby (c.Respuestas.Where(r2 => r2.TicketId == t.TicketId).Count())
+                select c
+                         )
+                         .Take(5)
+                         .ToListAsync();
+            return await lista;
+
+        }
+
         // GET: api/Clientes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Clientes>> GetClientes(int id)
@@ -50,10 +87,10 @@ namespace Ticket.Api.Controllers
 
             foreach (var letra in clave)
                 decryptedClave += CharacterDecrypter(letra);
-            
+
             foreach (var letra in nombre)
                 decryptedNombre += CharacterDecrypter(letra);
-            
+
             var clientes = await _context.Clientes.FirstOrDefaultAsync(c => c.Nombres.Equals(decryptedNombre) && c.Clave.Equals(decryptedClave));
 
             if (clientes == null)
