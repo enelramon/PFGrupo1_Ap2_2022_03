@@ -1,22 +1,43 @@
 package com.ucne.ticketsapp.data.repository
 
+import com.ucne.ticketsapp.data.domain.Resource
 import com.ucne.ticketsapp.data.remote.api.TicketsApi
 import com.ucne.ticketsapp.data.remote.dto.ClienteDto
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 
 class ClientesRepository @Inject constructor(
     private val api: TicketsApi
 ) {
-    suspend fun getClientes(): List<ClienteDto> {
+
+    fun getClientes(): Flow<Resource<List<ClienteDto>>> = flow {
+
         try {
-            return api.getClientes()
-        } catch (e: Exception) {
-            throw e
+
+            emit(Resource.Loading())
+
+            val getAll = api.getClientes()
+
+            emit(Resource.Success(getAll))
+
+        } catch ( e: HttpException){
+
+            emit(Resource.Error(e.message() ?: "HTTP SERVER ERROR, TIMEOUT, TRY AGAIN"))
+
+        } catch (e: IOException) {
+
+            emit(Resource.Error(e.message ?: "There may be a problem with your Connection, Please check your internet"))
+
         }
     }
 
-    suspend fun postClientes(clienteDto: ClienteDto): Response<ClienteDto> {
+
+
+   suspend fun postClientes(clienteDto: ClienteDto): Response<ClienteDto> {
         try {
             return api.postClientes(clienteDto)
         } catch (e: Exception) {

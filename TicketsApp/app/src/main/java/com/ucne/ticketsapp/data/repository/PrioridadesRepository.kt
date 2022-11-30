@@ -1,18 +1,37 @@
 package com.ucne.ticketsapp.data.repository
 
+import com.ucne.ticketsapp.data.domain.Resource
 import com.ucne.ticketsapp.data.remote.api.TicketsApi
+import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.data.remote.dto.PrioridadesDto
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 
 class PrioridadesRepository @Inject constructor(
     private val api: TicketsApi
 ) {
-    suspend fun getPrioridades(): List<PrioridadesDto> {
+    fun getPrioridades(): Flow<Resource<List<PrioridadesDto>>> = flow {
+
         try {
-            return api.getPrioridades()
-        } catch (e: Exception) {
-            throw e
+
+            emit(Resource.Loading())
+
+            val getAll = api.getPrioridades()
+
+            emit(Resource.Success(getAll))
+
+        } catch ( e: HttpException){
+
+            emit(Resource.Error(e.message() ?: "HTTP SERVER ERROR, TIMEOUT, TRY AGAIN"))
+
+        } catch (e: IOException) {
+
+            emit(Resource.Error(e.message ?: "There may be a problem with your Connection, Please check your internet"))
+
         }
     }
 

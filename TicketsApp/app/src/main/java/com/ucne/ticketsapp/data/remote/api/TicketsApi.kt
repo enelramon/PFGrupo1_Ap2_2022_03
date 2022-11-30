@@ -5,11 +5,13 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface TicketsApi {
+
+    //-------------------------Tickets----------------------------------//
     @GET("api/Tickets")
     suspend fun getTickets(): List<TicketsDto>
 
     @POST("api/Tickets")
-    suspend fun postTickets(@Body ticket : TicketsDto) : Response<TicketsDto>
+    suspend fun postTickets(@Body ticket: TicketsDto): Response<TicketsDto>
 
     @GET("api/Tickets/{id}")
     suspend fun getTicketsById(@Path("id") id: Int): TicketsDto?
@@ -22,6 +24,9 @@ interface TicketsApi {
 
     @DELETE("api/Tickets/{id}")
     suspend fun deleteTickets(@Path("id") id: Int): Response<TicketsDto>
+
+
+    //-------------------------Sistemas----------------------------------//
 
     @GET("api/Sistemas")
     suspend fun getSistemas(): List<SistemaDto>
@@ -42,6 +47,10 @@ interface TicketsApi {
     suspend fun deleteSistemas(@Path("id") id: Int): Response<SistemaDto>
 
 
+
+    //-------------------------Tipos----------------------------------//
+
+
     @GET("api/Tipos")
     suspend fun getTipos(): List<TiposDto>
 
@@ -56,6 +65,10 @@ interface TicketsApi {
 
     @DELETE("api/Tipos/{id}")
     suspend fun deleteTipos(@Path("id") id: Int): Response<TiposDto>
+
+
+
+    //-------------------------Prioridades----------------------------------//
 
 
     @GET("api/Prioridades")
@@ -77,8 +90,11 @@ interface TicketsApi {
     suspend fun deletePrioridades(@Path("id") id: Int): Response<PrioridadesDto>
 
 
+    //-------------------------Estatus----------------------------------//
+
+
     @GET("api/Estatus")
-    suspend fun getEstatus(): Response<List<EstatusDto>>
+    suspend fun getEstatus(): List<EstatusDto>
 
     @POST("api/Estatus")
     suspend fun postEstatus(@Body estatus: EstatusDto): Response<EstatusDto>
@@ -96,8 +112,11 @@ interface TicketsApi {
     suspend fun deleteEstatus(@Path("id") id: Int): Response<EstatusDto>
 
 
+    //-------------------------Configuraciones----------------------------------//
+
+
     @GET("api/Configuraciones")
-    suspend fun getConfigs(): Response<List<ConfiguracionesDto>>
+    suspend fun getConfigs(): List<ConfiguracionesDto>
 
     @POST("api/Configuraciones")
     suspend fun postConfig(@Body config: ConfiguracionesDto): Response<ConfiguracionesDto>
@@ -119,6 +138,9 @@ interface TicketsApi {
 
     @DELETE("api/Configuraciones/{id}")
     suspend fun deleteConfig(@Path("id") id: Int): Response<ConfiguracionesDto>
+
+
+    //-------------------------Clientes----------------------------------//
 
 
     @GET("api/Clientes")
