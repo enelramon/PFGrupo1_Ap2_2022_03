@@ -8,7 +8,6 @@ data class ClienteDto(
     val nombres: String = "",
     val clave: String = "",
     val configuracionId: Int = 0,
-    val configuracion: ConfiguracionesDto? = null,
     val tickets: List<TicketsDto>? = null,
     val respuestas: List<RespuestaDto>? = null
 )

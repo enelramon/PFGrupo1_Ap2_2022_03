@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.ui.components.CustomDatePickerDialog
 import com.ucne.ticketsapp.util.noRippleClickable
 
@@ -23,38 +24,35 @@ import com.ucne.ticketsapp.util.noRippleClickable
 @Composable
 fun TicketScreen(
     editMode: Boolean = false,
-    clienteId: Int,
+    user: ClienteDto,
     onPressCancel: () -> Unit,
     viewModel: TicketViewModel = hiltViewModel()
 ) {
-    viewModel.setCliente(clienteId)
+
     val uiState = viewModel.ticketsUiState.collectAsState()
     val sistemas = viewModel.sistemaListUiState.collectAsState()
     val prioridades = viewModel.prioridadesListUiState.collectAsState()
     val tipos = viewModel.tipoListUiState.collectAsState()
+
+    viewModel.setCliente(user)
 
     var sistemaExpanded by remember { mutableStateOf(false) }
     var tipoExpanded by remember { mutableStateOf(false) }
     var prioridadExpanded by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     if (showDatePicker) {
-        CustomDatePickerDialog("", { viewModel.setDate(it) }) { showDatePicker = false }
+        CustomDatePickerDialog("Seleccione la fecha", { viewModel.setDate(it) }) { showDatePicker = false }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 20.dp, horizontal = 8.dp)
-            .padding(bottom = 60.dp),
+            .padding(vertical = 60.dp, horizontal = 8.dp).padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Text(
-                text = if (editMode) "Edición de Tickets" else "Creacion de Tickets",
-                style = MaterialTheme.typography.headlineLarge
-            )
 
             Column(
                 Modifier
@@ -66,6 +64,12 @@ fun TicketScreen(
                     value = uiState.value.sistema,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         disabledBorderColor = Color(
+                            0xFF7A7A7A
+                        ),
+                        disabledLabelColor = Color(
+                            0xFF7A7A7A
+                        ),
+                        disabledTextColor = Color(
                             0xFF7A7A7A
                         )
                     ),
@@ -117,6 +121,12 @@ fun TicketScreen(
                     value = uiState.value.tipo,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         disabledBorderColor = Color(
+                            0xFF7A7A7A
+                        ),
+                        disabledLabelColor = Color(
+                            0xFF7A7A7A
+                        ),
+                        disabledTextColor = Color(
                             0xFF7A7A7A
                         )
                     ),
@@ -171,6 +181,12 @@ fun TicketScreen(
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             disabledBorderColor = Color(
                                 0xFF7A7A7A
+                            ),
+                            disabledLabelColor = Color(
+                                0xFF7A7A7A
+                            ),
+                            disabledTextColor = Color(
+                                0xFF7A7A7A
                             )
                         ),
                         enabled = false, readOnly = true,
@@ -195,6 +211,12 @@ fun TicketScreen(
                     value = uiState.value.prioridad,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         disabledBorderColor = Color(
+                            0xFF7A7A7A
+                        ),
+                        disabledLabelColor = Color(
+                            0xFF7A7A7A
+                        ),
+                        disabledTextColor = Color(
                             0xFF7A7A7A
                         )
                     ),

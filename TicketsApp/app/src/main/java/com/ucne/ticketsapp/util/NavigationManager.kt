@@ -11,7 +11,6 @@ import androidx.navigation.compose.composable
 import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.ui.MainLayout
 import com.ucne.ticketsapp.ui.login.LoginScreen
-import com.ucne.ticketsapp.ui.ticket.TicketScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -34,7 +33,7 @@ fun NavigationManager(
         //LoginScreen
         composable(Screen.LoginScreen.ruta)
         {
-            LoginScreen() { user, adminMode ->
+            LoginScreen { user, adminMode ->
                 userLogeado = user
                 inAdminMode = adminMode
                 navController.navigate(Screen.MainScreen.ruta)
@@ -43,15 +42,6 @@ fun NavigationManager(
         //Main Screen
         composable(Screen.MainScreen.ruta) {
             MainLayout(userLogeado!!, inAdminMode = inAdminMode, navController)
-        }
-
-        //Ticket Screen
-        composable(Screen.TicketScreen.ruta) {
-            TicketScreen(
-                editMode = false,
-                onPressCancel = { navController.navigateUp() },
-                clienteId = userLogeado!!.clienteId
-            )
         }
     }
 }

@@ -26,6 +26,7 @@ fun customLightColorScheme(colorIndex: Int): ColorScheme {
                 onTertiary = GreenAlt10,
                 background = Color(0xFFFBFFFB),
                 surface = Color(0xFFFBFFFB),
+                surfaceVariant= GreenGrey90,
                 onBackground = Color(0xFF1B1F1C),
                 onSurface = Color(0xFF1B1F1C),
             )
@@ -44,6 +45,7 @@ fun customLightColorScheme(colorIndex: Int): ColorScheme {
                 background = Color(0xFFFBFEFF),
                 onBackground = Color(0xFF1B1C1F),
                 surface = Color(0xFFFBFEFF),
+                surfaceVariant= BlueGrey90,
                 onSurface = Color(0xFF1B1C1F),
             )
         }

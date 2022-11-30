@@ -18,14 +18,15 @@ import androidx.compose.ui.window.DialogProperties
 import com.ucne.ticketsapp.data.remote.dto.RespuestaDto
 import com.ucne.ticketsapp.data.remote.dto.TicketsDto
 import com.ucne.ticketsapp.util.getTicketColors
+import com.ucne.ticketsapp.util.toPackage
 
 @Composable
-fun ReplyTicketDialog(ticket: TicketsDto) {
+fun ReplyTicketDialog(ticket: TicketsDto, nombreCliente: String) {
     Dialog(
         onDismissRequest = { /*Cerrar el dialog*/ },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
-        val colors = getTicketColors(ticket)
+        val colors = getTicketColors(ticket.toPackage())
         var writtingMode by remember { mutableStateOf(false) }
         var showRespuesta by remember { mutableStateOf(false) }
         Surface(
@@ -54,7 +55,7 @@ fun ReplyTicketDialog(ticket: TicketsDto) {
                 if (showRespuesta) {
                     LazyColumn() {
                         ticket.respuestas.forEach {
-                            item { RespuestaRow(respuesta = it) }
+                            item { RespuestaRow(respuesta = it, nombreCliente =nombreCliente ) }
                         }
                     }
                 }
@@ -117,11 +118,11 @@ fun ReplyTicketDialog(ticket: TicketsDto) {
 }
 
 @Composable
-private fun RespuestaRow(respuesta: RespuestaDto) {
+private fun RespuestaRow(respuesta: RespuestaDto, nombreCliente: String) {
     Column {
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                text = "Autor: ${respuesta.cliente.nombres}",
+                text = "Autor: $nombreCliente",
                 style = MaterialTheme.typography.labelMedium
             )
             Text("Fecha: ${respuesta.fecha}")

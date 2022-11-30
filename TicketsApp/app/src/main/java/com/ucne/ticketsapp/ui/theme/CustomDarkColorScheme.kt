@@ -26,6 +26,7 @@ fun customDarkColorScheme(colorIndex: Int): ColorScheme {
                 onTertiary = GreenAlt90,
                 background = Color(0xFF1B1F1C),
                 surface = Color(0xFF1B1F1C),
+                surfaceVariant= GreenGrey10,
                 onBackground = Color(0xFFFBFFFB),
                 onSurface = Color(0xFFFBFFFB),
             )
@@ -43,6 +44,7 @@ fun customDarkColorScheme(colorIndex: Int): ColorScheme {
                 onTertiary = BlueAlt90,
                 background = Color(0xFF1B1C20),
                 surface = Color(0xFF1B1C20),
+                surfaceVariant= BlueGrey10,
                 onSurface = Color(0xFFFBFEFF),
                 onBackground = Color(0xFFFBFEFF),
             )

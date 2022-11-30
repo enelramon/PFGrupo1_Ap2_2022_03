@@ -64,7 +64,8 @@ fun MainLayout(
                                     filtrosTickets
                                 } else null,
                                 onFilterSelected = { ticketFilterSelected = it },
-                                onShowMenu = { navRailExpanded = !navRailExpanded })
+                                onShowMenu = { navRailExpanded = !navRailExpanded }
+                            )
                         }
                         2 -> {
                             CenterAlignedTopAppBar(title = { Text("Clientes (No Disponible)") })
@@ -235,14 +236,12 @@ fun MainLayout(
                             1 -> {
                                 TicketScreen(
                                     onPressCancel = { selectedTicketOption = -1 },
-                                    clienteId = user.clienteId
+                                    user = user
                                 )
                             }
                             else -> {
                                 val selectedTickets: List<TicketsDto> = emptyList()
                                 TicketListScreen(
-                                    ticketsListUiState.list,
-                                    selectedList = selectedTickets,
                                     onReplyModeChange = {},
                                     replyMode = selectedTicketOption == 2
                                 )

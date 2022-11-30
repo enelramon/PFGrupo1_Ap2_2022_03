@@ -10,6 +10,8 @@ import com.ucne.ticketsapp.data.repository.ClientesRepository
 import com.ucne.ticketsapp.data.repository.RemoteConfigRepository
 import com.ucne.ticketsapp.data.repository.SistemasRepository
 import com.ucne.ticketsapp.data.repository.TicketsRepository
+import com.ucne.ticketsapp.ui.states.ClientesListUiState
+import com.ucne.ticketsapp.ui.states.TicketListUiState
 import com.ucne.ticketsapp.util.UserConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,35 +26,9 @@ data class ProfileUiState(
     val colorIndex: Int = 0
 )
 
-data class TicketListUiState(
-    val list: List<TicketsDto> = emptyList()
-)
-
-data class ClientesListUiState(
-    val list: List<ClienteDto> = emptyList()
-)
 
 data class ConfigUiState(
     val currentConfig: UserConfig = UserConfig()
-)
-
-
-data class TicketUiState(
-    val ticketId: Int = 0,
-    val fechaCreacion: String = "",
-    val clienteId: Int = 0,
-    val sistemaId: Int = 0,
-    val tipoId: Int = 0,
-    val prioridadId: Int = 0,
-    val estatusId: Int = 0,
-    val especificaciones: String = "",
-    val fechaFinalizado: String = "",
-    val orden: Int = 0,
-
-    val estatus: String = "",
-    val prioridad: String = "",
-    val sistema: String = "",
-    val tipo: String = "",
 )
 
 data class ClienteUiState(
@@ -104,7 +80,6 @@ class MainViewModel @Inject constructor(
                     clienteId = it.clienteId,
                     nombres = it.nombres,
                     configuracionId = it.configuracionId,
-                    configuracion = it.configuracion,
                     tickets = it.tickets,
                     respuestas = it.respuestas
                 )
@@ -154,7 +129,6 @@ class MainViewModel @Inject constructor(
                         nombres = clienteCopiar.nombres,
                         clave = clienteCopiar.clave,
                         configuracionId = config!!.configuracionId,
-                        configuracion = config,
                         tickets = clienteCopiar.tickets,
                         respuestas = clienteCopiar.respuestas
                     )

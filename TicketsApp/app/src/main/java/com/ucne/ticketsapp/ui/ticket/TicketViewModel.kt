@@ -4,11 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ucne.ticketsapp.data.remote.dto.PrioridadesDto
-import com.ucne.ticketsapp.data.remote.dto.SistemaDto
-import com.ucne.ticketsapp.data.remote.dto.TicketsDto
-import com.ucne.ticketsapp.data.remote.dto.TiposDto
+import com.ucne.ticketsapp.data.remote.dto.*
 import com.ucne.ticketsapp.data.repository.*
+import com.ucne.ticketsapp.ui.ClienteUiState
+import com.ucne.ticketsapp.ui.states.TicketUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,22 +15,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-data class TicketUiState(
-    val id: Int = 0,
-    val clienteId: Int = 0,
-    val sistemaId: Int = 0,
-    val sistema: String = "",
-    val prioridadId: Int = 0,
-    val prioridad: String = "",
-    val estatusId: Int = 0,
-    val tipoId: Int = 0,
-    val tipo: String = "",
-    val fecha: String = "",
-    val especificaciones: String = ""
-)
+
+
 
 
 data class SistemaListUiState(
@@ -53,13 +40,14 @@ class TicketViewModel @Inject constructor(
     private val prioridadesRepository: PrioridadesRepository,
     private val tiposRepository: TiposRepository,
     private val clientesRepository: ClientesRepository,
-    private val estatusRepository: EstatusRepository,
     private val ticketsRepository: TicketsRepository
 ) : ViewModel() {
 
     private val listPrioridadesUiState = MutableStateFlow(PrioridadesListUiState())
     val prioridadesListUiState: StateFlow<PrioridadesListUiState> =
         listPrioridadesUiState.asStateFlow()
+
+    private var clientUiState = MutableStateFlow(ClienteUiState())
 
     private val listSistemaUiState = MutableStateFlow(SistemaListUiState())
     val sistemaListUiState: StateFlow<SistemaListUiState> = listSistemaUiState.asStateFlow()
@@ -91,9 +79,6 @@ class TicketViewModel @Inject constructor(
     }
 
     fun setSistema(id: Int) {
-        ticketsUiState.value = ticketsUiState.value.copy(
-            sistema = ""
-        )
         viewModelScope.launch {
             sistemaRepository.getSistemasById(id)?.let {
                 ticketsUiState.value = ticketsUiState.value.copy(
@@ -105,9 +90,6 @@ class TicketViewModel @Inject constructor(
     }
 
     fun setTipo(id: Int) {
-        ticketsUiState.value = ticketsUiState.value.copy(
-            tipo = ""
-        )
         viewModelScope.launch {
             tiposRepository.getTiposById(id)?.let {
                 ticketsUiState.value = ticketsUiState.value.copy(
@@ -119,9 +101,6 @@ class TicketViewModel @Inject constructor(
     }
 
     fun setPrioridad(id: Int) {
-        ticketsUiState.value = ticketsUiState.value.copy(
-            prioridad = ""
-        )
         viewModelScope.launch {
             prioridadesRepository.getPrioridadesById(id)?.let {
                 ticketsUiState.value = ticketsUiState.value.copy(
@@ -140,65 +119,45 @@ class TicketViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun save() {
+
         viewModelScope.launch {
-            val tipoSelected = tiposRepository.getTiposById(ticketsUiState.value.tipoId)
-            val prioridadSelected =
-                prioridadesRepository.getPrioridadesById(ticketsUiState.value.prioridadId)
-            val sistemaSelected = sistemaRepository.getSistemasById(ticketsUiState.value.sistemaId)
-
-            val clienteSelected = clientesRepository.getClientesById(ticketsUiState.value.clienteId)
-            val formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy")
-
-            if (ticketsUiState.value.id == 0) {
-                val estatusSelected = estatusRepository.getEstatusById(1)
-                ticketsRepository.postTickets(
-                    TicketsDto(
-                        tipoId = ticketsUiState.value.tipoId,
-                        tipo = tipoSelected!!,
-                        prioridadId = ticketsUiState.value.prioridadId,
-                        prioridad = prioridadSelected!!,
-                        estatusId = 1,
-                        estatus = estatusSelected!!,
-                        sistemaId = ticketsUiState.value.sistemaId,
-                        sistema = sistemaSelected!!,
-                        fechaCreacion = LocalDate.now().format(formatter),
-                        fechaFinalizado = "",
-                        orden = 1,
-                        clienteId = ticketsUiState.value.clienteId,
-                        especificaciones = ticketsUiState.value.especificaciones,
-                        respuestas = emptyList(),
-                        cliente = clienteSelected!!,
-                    )
-                )
-            } else {
+            if (ticketsUiState.value.id > 0) {
                 val lastTicket = ticketsRepository.getTicketsById(ticketsUiState.value.id)
-                val estatusSelected =
-                    estatusRepository.getEstatusById(ticketsUiState.value.estatusId)
                 ticketsRepository.updateTickets(
                     ticketsUiState.value.id,
                     TicketsDto(
                         ticketId = ticketsUiState.value.id,
                         tipoId = ticketsUiState.value.tipoId,
-                        tipo = tipoSelected!!,
                         prioridadId = ticketsUiState.value.prioridadId,
-                        prioridad = prioridadSelected!!,
                         estatusId = 1,
-                        estatus = estatusSelected!!,
                         sistemaId = ticketsUiState.value.sistemaId,
-                        sistema = sistemaSelected!!,
-                        fechaCreacion = LocalDate.now().format(formatter),
-                        fechaFinalizado = "",
+                        fechaCreacion = ticketsUiState.value.fecha,
+                        fechaFinalizado = ticketsUiState.value.fecha,
                         orden = 1,
                         clienteId = ticketsUiState.value.clienteId,
                         especificaciones = ticketsUiState.value.especificaciones,
                         respuestas = lastTicket!!.respuestas,
-                        cliente = clienteSelected!!,
                     )
                 )
             }
-
+            else
+            {
+                ticketsRepository.postTickets(
+                    TicketsDto(
+                        prioridadId = ticketsUiState.value.prioridadId,
+                        estatusId = 1,
+                        tipoId = ticketsUiState.value.tipoId,
+                        sistemaId = ticketsUiState.value.sistemaId,
+                        fechaCreacion = LocalDate.now().toString(),
+                        fechaFinalizado = LocalDate.now().toString(),
+                        orden = 1,
+                        clienteId = ticketsUiState.value.clienteId,
+                        especificaciones = ticketsUiState.value.especificaciones
+                    )
+                )
+            }
+            clean()
         }
-        clean()
     }
 
     private fun clean() {
@@ -223,9 +182,21 @@ class TicketViewModel @Inject constructor(
         )
     }
 
-    fun setCliente(clienteId: Int) {
-        ticketsUiState.value = ticketsUiState.value.copy(
-            clienteId = clienteId
-        )
+    fun setCliente(user: ClienteDto) {
+        viewModelScope.launch {
+            clientesRepository.getClientesById(user.clienteId)?.let {
+                clientUiState.value = clientUiState.value.copy(
+                    clienteId = it.clienteId,
+                    nombres = it.nombres,
+                    configuracionId = it.configuracionId,
+                    tickets = it.tickets,
+                    respuestas = it.respuestas
+                )
+                ticketsUiState.value = ticketsUiState.value.copy(
+                    clienteId = it.clienteId
+                )
+            }
+        }
+
     }
 }

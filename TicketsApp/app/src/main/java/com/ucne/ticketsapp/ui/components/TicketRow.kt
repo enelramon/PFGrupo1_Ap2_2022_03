@@ -13,80 +13,92 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.ucne.ticketsapp.data.remote.dto.TicketsDto
+import com.ucne.ticketsapp.ui.states.TicketUiState
 import com.ucne.ticketsapp.util.getTicketColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketRow(
-    ticket: TicketsDto,
+    ticket: TicketUiState,
     modifier: Modifier = Modifier,
-    isSelected: Boolean,
     onReplyModeChange: () -> Unit,
     replyMode: Boolean,
 ) {
     val colors = getTicketColors(ticket)
     //Datos del ticket
     Card(
-        modifier = modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isSelected) {
-                0.dp
-            } else {
-                20.dp
-            }
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp), elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp
         )
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(
-                    color = colors.estatusColor.copy(alpha = 0.75f),
+                .clip(
                     shape = RoundedCornerShape(size = 16.dp)
                 )
-                .padding(vertical = 8.dp)
+                .padding(10.dp)
         ) {
 
-            Row {
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Respuestas de Ticket ${ticket.orden} (${ticket.tipo.tipo})",
-                    style = MaterialTheme.typography.headlineLarge
+                    text = "TicketID: ${ticket.id} ",
+                )
+                Text(
+                    text = "(Orden ${ticket.orden})",
+                )
+
+                Text(
+                    text = "[${ticket.tipo}]",
                 )
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(percent = 50))
                         .background(color = colors.tipoColor)
-                        .size(13.dp)
+                        .padding(top = 3.dp)
+                        .size(18.dp)
                 )
             }
+            Text(text = ticket.estatus,  style = MaterialTheme.typography.labelMedium,modifier= Modifier.padding(3.dp))
+            Divider(
+                color = colors.estatusColor.copy(alpha = 0.75f),
+                thickness = 3.dp,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            )
             Column {
                 Text(
-                    text = "Creado por: ${ticket.cliente.nombres}",
-                    style = MaterialTheme.typography.headlineSmall,
+                    text = "Creado por: ${ticket.cliente}",
+                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier
-                        .padding(bottom = 15.dp)
+                        .padding(bottom = 4.dp)
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Sistema: " + ticket.sistema.sistema)
-                    Text(text = "Prioridad " + ticket.prioridad.prioridad)
+                    Text(text = "Sistema: ${ticket.sistema}")
+                    Text(text = "Prioridad ${ticket.prioridad}")
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(percent = 50))
-                            .background(color = colors.prioridadColor)
-                            .size(13.dp)
+                            .background(color = colors.prioridadColor).padding(top=2.dp)
+                            .size(14.dp)
                     )
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = if (ticket.estatusId == 3) Arrangement.SpaceBetween else Arrangement.Start
                 ) {
-                    Text(text = "Creado  " + ticket.fechaCreacion)
+                    Text(text = "Fecha de creacion: " + ticket.fecha.substring(0,10))
                     if (ticket.estatusId == 3)
-                        Text(text = "Cerrado  " + ticket.fechaFinalizado)
+                        Text(text = "Fecha de cierre: " + ticket.fechaCerrado.substring(0,10))
                 }
             }
+
             Text(text = ticket.especificaciones)
         }
         if (replyMode) {
