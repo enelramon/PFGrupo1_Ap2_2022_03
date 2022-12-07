@@ -1,7 +1,7 @@
 package com.ucne.ticketsapp.util
 
 fun stringEncrypter(input: String): String {
-    var encryptedOutput: String = ""
+    var encryptedOutput = ""
     input.forEach {
         when (it) {
             'A' -> {

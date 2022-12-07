@@ -44,7 +44,7 @@ class RemoteConfigRepository @Inject constructor(
     //PUT
     suspend fun updateConfig(id: Int, newConfig: ConfiguracionesDto): Response<ConfiguracionesDto> {
         try {
-            return api.updateConfig(id, newConfig)
+            return api.putConfig(id, newConfig)
         } catch (e: Exception) {
             throw e
         }

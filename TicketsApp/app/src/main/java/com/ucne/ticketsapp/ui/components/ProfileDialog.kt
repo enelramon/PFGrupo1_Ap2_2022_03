@@ -16,12 +16,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ucne.ticketsapp.ui.MainViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileDialog(
-    lastSelectedModule: Int,
     viewModel: MainViewModel,
-    onCancelPress: (Int) -> Unit
+    onCancelPress: () -> Unit
 ) {
     val profileUiState = viewModel.profileUiState.collectAsState()
     val userUiState = viewModel.clientUiState.collectAsState()
@@ -100,49 +98,73 @@ fun ProfileDialog(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "Morado")
-                                RadioButton(
-                                    selected = profileUiState.value.colorIndex == 0,
-                                    onClick = { viewModel.setProfileColor(0) },
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFFD0BCFF),
-                                        unselectedColor = Color(0xFFD0BCFF)
-                                    ),
-                                    modifier = Modifier.size(25.dp)
-                                )
-                            }
+                            RadioButton(
+                                selected = profileUiState.value.colorIndex == 0,
+                                onClick = { viewModel.setProfileColor(0) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFFD0BCFF),
+                                    unselectedColor = Color(0xFFD0BCFF)
+                                ),
+                                modifier = Modifier.size(25.dp)
+                            )
 
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "Verde")
-                                RadioButton(
-                                    selected = profileUiState.value.colorIndex == 1,
-                                    onClick = { viewModel.setProfileColor(1) },
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFF4CAF50),
-                                        unselectedColor = Color(0xFF4CAF50)
-                                    ),
-                                    modifier = Modifier.size(25.dp)
-                                )
-                            }
+                            RadioButton(
+                                selected = profileUiState.value.colorIndex == 1,
+                                onClick = { viewModel.setProfileColor(1) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFF4CAF50),
+                                    unselectedColor = Color(0xFF4CAF50)
+                                ),
+                                modifier = Modifier.size(25.dp)
+                            )
+                            RadioButton(
+                                selected = profileUiState.value.colorIndex == 2,
+                                onClick = { viewModel.setProfileColor(2) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFF2196F3),
+                                    unselectedColor = Color(0xFF2196F3)
+                                ),
+                                modifier = Modifier.size(25.dp)
+                            )
 
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "Azul")
-                                RadioButton(
-                                    selected = profileUiState.value.colorIndex == 2,
-                                    onClick = { viewModel.setProfileColor(2) },
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFF2196F3),
-                                        unselectedColor = Color(0xFF2196F3)
-                                    ),
-                                    modifier = Modifier.size(25.dp)
-                                )
-                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top=10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            RadioButton(
+                                selected = profileUiState.value.colorIndex == 3,
+                                onClick = { viewModel.setProfileColor(3) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFFFFE929),
+                                    unselectedColor = Color(0xFFFFE929)
+                                ),
+                                modifier = Modifier.size(25.dp)
+                            )
+
+                            RadioButton(
+                                selected = profileUiState.value.colorIndex == 4,
+                                onClick = { viewModel.setProfileColor(4) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFFFF7B07),
+                                    unselectedColor = Color(0xFFFF7B07)
+                                ),
+                                modifier = Modifier.size(25.dp)
+                            )
+                            RadioButton(
+                                selected = profileUiState.value.colorIndex == 5,
+                                onClick = { viewModel.setProfileColor(5) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color(0xFFF32121),
+                                    unselectedColor = Color(0xFFF32121)
+                                ),
+                                modifier = Modifier.size(25.dp)
+                            )
+
                         }
                     }
-
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -151,7 +173,7 @@ fun ProfileDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlinedButton(
-                        onClick = { onCancelPress(lastSelectedModule) }
+                        onClick =  onCancelPress
                     ) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = "Cancelar")
                         Text(text = "Cancelar")
@@ -160,7 +182,7 @@ fun ProfileDialog(
                     Button(
                         onClick = {
                             viewModel.saveProfile()
-                            onCancelPress(lastSelectedModule)
+                            onCancelPress()
                         }
                     ) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = "Aceptar")

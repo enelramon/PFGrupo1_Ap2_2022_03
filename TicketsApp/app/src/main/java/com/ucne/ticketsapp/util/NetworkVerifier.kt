@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "BooleanMethodIsAlwaysInverted")
 
 package com.ucne.ticketsapp.util
 

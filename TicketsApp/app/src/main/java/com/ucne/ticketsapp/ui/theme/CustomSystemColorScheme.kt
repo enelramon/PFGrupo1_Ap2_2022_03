@@ -7,5 +7,5 @@ fun customSystemColorScheme(darkTheme: Boolean, colorIndex: Int): ColorScheme {
     return if (darkTheme)
         customDarkColorScheme(colorIndex = colorIndex)
     else
-        customLightColorScheme(colorIndex = colorIndex)
+        customLightColorsScheme(colorIndex = colorIndex)
 }

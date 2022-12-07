@@ -7,29 +7,33 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ucne.ticketsapp.data.remote.dto.TicketsDto
-import com.ucne.ticketsapp.ui.components.TicketRow
 
 
 @Composable
 fun TicketListScreen(
-    onReplyModeChange: () -> Unit,
-    replyMode: Boolean,
-    viewModel : TicketListViewModel= hiltViewModel()
+    onRowSelect: (Int) -> Unit,
+    onRowDoubleTap: (Int) -> Unit,
+    viewModel: TicketListViewModel = hiltViewModel()
 ) {
     viewModel.refresh()
     val uiState = viewModel.ticketPackageListUiState.collectAsState()
-    LazyColumn(Modifier.padding(
-        top=70.dp,
-        bottom = 80.dp,
-        start = 10.dp, end = 10.dp
-    )) {
+
+
+    LazyColumn(
+        Modifier.padding(
+            top = 70.dp,
+            bottom = 80.dp,
+            start = 10.dp, end = 10.dp
+        )
+    ) {
         uiState.value.list.forEach {
             item {
                 TicketRow(
+                    onDoubleTap = { onRowDoubleTap(it) },
+                    onPress = {
+                        onRowSelect(it)
+                    },
                     ticket = it,
-                    onReplyModeChange = onReplyModeChange,
-                    replyMode = replyMode
                 )
             }
         }

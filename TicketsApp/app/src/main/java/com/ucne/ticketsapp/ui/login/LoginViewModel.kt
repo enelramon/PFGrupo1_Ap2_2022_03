@@ -19,7 +19,7 @@ data class LoginUiState(
     val clave: String = "",
     val adminMode: Boolean = false,
     val recuerdame: Boolean = false,
-    val funcionLogin: ((ClienteDto, Boolean) -> Unit)? = null
+    val funcionLogin: ((Int, Boolean) -> Unit)? = null
 )
 
 @HiltViewModel
@@ -48,14 +48,14 @@ class LoginViewModel @Inject constructor(
                 )
 
                 if (user != null) {
-                    uiState.value.funcionLogin?.let { it(user!!, uiState.value.adminMode) }
+                    uiState.value.funcionLogin?.let { it(user!!.clienteId, uiState.value.adminMode) }
                     clean()
                 }
             }
         }
     }
 
-    fun login(): ClienteDto? {
+    fun login(): Int {
         viewModelScope.launch {
             user = clienteRepository.getCliente(
                 nombre = stringEncrypter(uiState.value.nombre),
@@ -77,7 +77,7 @@ class LoginViewModel @Inject constructor(
                 clean()
             }
         }
-        return user
+        return user?.clienteId ?: 0
     }
 
     private fun clean() {
@@ -93,7 +93,7 @@ class LoginViewModel @Inject constructor(
         uiState.value = uiState.value.copy(clave = newValue)
     }
 
-    fun setLoginFunction(funcion: ((ClienteDto, Boolean) -> Unit)) {
+    fun setLoginFunction(funcion: ((Int, Boolean) -> Unit)) {
         uiState.value = uiState.value.copy(funcionLogin = funcion)
     }
 

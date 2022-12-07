@@ -35,7 +35,7 @@ class EstatusRepository @Inject constructor(
     //PUT
     suspend fun updateEstatus(id: Int, newEstatus:  EstatusDto): Response<EstatusDto> {
         try {
-            return api.updateEstatus(id, newEstatus)
+            return api.putEstatus(id, newEstatus)
         } catch (e: Exception) {
             throw e
         }

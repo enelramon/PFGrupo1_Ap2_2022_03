@@ -3,12 +3,11 @@ package com.ucne.ticketsapp.util
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ucne.ticketsapp.data.remote.dto.ClienteDto
+import androidx.navigation.navArgument
 import com.ucne.ticketsapp.ui.MainLayout
 import com.ucne.ticketsapp.ui.login.LoginScreen
 
@@ -17,14 +16,7 @@ import com.ucne.ticketsapp.ui.login.LoginScreen
 fun NavigationManager(
     navController: NavHostController,
 ) {
-    val alphaAnimation = remember { androidx.compose.animation.core.Animatable(0f) }
-    LaunchedEffect(Unit) {
-        alphaAnimation.animateTo(1f)
-    }
-    var userLogeado: ClienteDto? = null
-    remember { userLogeado }
-    var inAdminMode = false
-    remember { inAdminMode }
+
 
     NavHost(
         navController = navController,
@@ -34,14 +26,20 @@ fun NavigationManager(
         composable(Screen.LoginScreen.ruta)
         {
             LoginScreen { user, adminMode ->
-                userLogeado = user
-                inAdminMode = adminMode
-                navController.navigate(Screen.MainScreen.ruta)
+                navController.navigate(Screen.MainScreen.ruta +"/$user/$adminMode")
             }
         }
         //Main Screen
-        composable(Screen.MainScreen.ruta) {
-            MainLayout(userLogeado!!, inAdminMode = inAdminMode, navController)
+        composable(
+            route = Screen.MainScreen.ruta+"/{userId}/{adminMode}",
+            arguments = listOf(
+                navArgument("userId"){type = NavType.IntType},
+                navArgument("adminMode"){type = NavType.BoolType}
+            )
+        ) {
+            val userLogeado = it.arguments?.getInt("userId")?:0
+            val inAdminMode = it.arguments?.getBoolean("adminMode")?: false
+            MainLayout(userLogeado, inAdminMode = inAdminMode, navController)
         }
     }
 }

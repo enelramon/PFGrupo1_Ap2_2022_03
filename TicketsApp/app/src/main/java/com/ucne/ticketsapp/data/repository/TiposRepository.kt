@@ -18,7 +18,7 @@ class TiposRepository @Inject constructor(
 
     suspend fun postTipos(tiposDto: TiposDto): Response<TiposDto> {
         try {
-            return api.postTipos(tiposDto)
+            return api.postTipo(tiposDto)
         } catch (e: Exception) {
             throw e
         }
@@ -26,7 +26,7 @@ class TiposRepository @Inject constructor(
 
     suspend fun getTiposById(id: Int): TiposDto? {
         try {
-            return api.getTiposById(id)
+            return api.getTipoById(id)
         } catch (e: Exception) {
             throw e
         }
@@ -35,7 +35,7 @@ class TiposRepository @Inject constructor(
     //PUT
     suspend fun updateTipos(id: Int, newTipos: TiposDto): Response<TiposDto> {
         try {
-            return api.updateTipos(id, newTipos)
+            return api.putTipo(id, newTipos)
         } catch (e: Exception) {
             throw e
         }
@@ -43,7 +43,7 @@ class TiposRepository @Inject constructor(
 
     suspend fun deleteTipos(id: Int): Response<TiposDto> {
         try {
-            return api.deleteTipos(id)
+            return api.deleteTipo(id)
         } catch (e: Exception) {
             throw e
         }

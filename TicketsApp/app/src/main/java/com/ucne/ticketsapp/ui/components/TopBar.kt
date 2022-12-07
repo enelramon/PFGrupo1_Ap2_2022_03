@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.ucne.ticketsapp.util.noRippleClickable
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     title: String,
@@ -46,12 +47,12 @@ fun TopBar(
                                     contentDescription = null
                                 )
                             }
-                        }
-                        IconButton(
-                            onClick = onShowMenu,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        ) {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+                            IconButton(
+                                onClick = onShowMenu,
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            ) {
+                                Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+                            }
                         }
                     }
 

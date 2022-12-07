@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class TicketListViewModel @Inject constructor(
     private val ticketsRepository: TicketsRepository,
@@ -26,11 +27,9 @@ class TicketListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val listTicketUiState = MutableStateFlow(TicketListUiState())
-    val ticketListUiState: StateFlow<TicketListUiState> = listTicketUiState.asStateFlow()
 
     private val listTicketPackageUiState = MutableStateFlow(TicketPackageListUiState())
-    val ticketPackageListUiState: StateFlow<TicketPackageListUiState> =
-        listTicketPackageUiState.asStateFlow()
+    val ticketPackageListUiState: StateFlow<TicketPackageListUiState> = listTicketPackageUiState.asStateFlow()
 
     fun refresh() {
         viewModelScope.launch {
@@ -64,7 +63,7 @@ class TicketListViewModel @Inject constructor(
                         id = ticket.id,
                         orden = ticket.orden,
                         clienteId = ticket.clienteId,
-                        cliente = clientesRepository.getClientesById(ticket.clienteId)?.nombres ?: "cliente no encontrado",
+                        cliente = clientesRepository.getClienteById(ticket.clienteId)?.nombres ?: "cliente no encontrado",
                         tipoId = ticket.tipoId,
                         tipo = tiposRepository.getTiposById(ticket.tipoId)?.tipo ?: "tipo no encontrado",
                         sistemaId = ticket.sistemaId,
@@ -83,6 +82,5 @@ class TicketListViewModel @Inject constructor(
                 list = listAux
             )
         }
-
     }
 }

@@ -5,17 +5,21 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface TicketsApi {
+    //TODO: Agregar Resource
+
     @GET("api/Tickets")
     suspend fun getTickets(): List<TicketsDto>
 
     @POST("api/Tickets")
-    suspend fun postTickets(@Body ticket : TicketsDto) : Response<TicketsDto>
+    suspend fun postTicket(@Body ticket : TicketsDto) : Response<TicketsDto>
 
+    @GET("api/Tickets/Top5Tickets/{id}")
+    suspend fun getTop5Tickets(@Path("id") id: Int): List<TicketsDto>
     @GET("api/Tickets/{id}")
-    suspend fun getTicketsById(@Path("id") id: Int): TicketsDto?
+    suspend fun getTicketById(@Path("id") id: Int): TicketsDto?
 
     @PUT("api/Tickets/{id}")
-    suspend fun updateTickets(
+    suspend fun putTicket(
         @Path("id") id: Int,
         @Body newTicket: TicketsDto
     ): Response<TicketsDto>
@@ -26,55 +30,58 @@ interface TicketsApi {
     @GET("api/Sistemas")
     suspend fun getSistemas(): List<SistemaDto>
 
+    @GET("MoreTickets")
+    suspend fun getSistemasWithMoreTickets(): List<SistemaDto>
+
     @POST("api/Sistemas")
-    suspend fun postSistemas(@Body sistema: SistemaDto): Response<SistemaDto>
+    suspend fun postSistema(@Body sistema: SistemaDto): Response<SistemaDto>
 
     @GET("api/Sistemas/{id}")
-    suspend fun getSistemasById(@Path("id") id: Int): SistemaDto?
+    suspend fun getSistemaById(@Path("id") id: Int): SistemaDto?
 
     @PUT("api/Sistemas/{id}")
-    suspend fun updateSistemas(
+    suspend fun putSistema(
         @Path("id") id: Int,
         @Body newSistema: SistemaDto
     ): Response<SistemaDto>
 
     @DELETE("api/Sistemas/{id}")
-    suspend fun deleteSistemas(@Path("id") id: Int): Response<SistemaDto>
+    suspend fun deleteSistema(@Path("id") id: Int): Response<SistemaDto>
 
 
     @GET("api/Tipos")
     suspend fun getTipos(): List<TiposDto>
 
     @POST("api/Tipos")
-    suspend fun postTipos(@Body tipo: TiposDto): Response<TiposDto>
+    suspend fun postTipo(@Body tipo: TiposDto): Response<TiposDto>
 
     @GET("api/Tipos/{id}")
-    suspend fun getTiposById(@Path("id") id: Int): TiposDto?
+    suspend fun getTipoById(@Path("id") id: Int): TiposDto?
 
     @PUT("api/Tipos/{id}")
-    suspend fun updateTipos(@Path("id") id: Int, @Body newTipo: TiposDto): Response<TiposDto>
+    suspend fun putTipo(@Path("id") id: Int, @Body newTipo: TiposDto): Response<TiposDto>
 
     @DELETE("api/Tipos/{id}")
-    suspend fun deleteTipos(@Path("id") id: Int): Response<TiposDto>
+    suspend fun deleteTipo(@Path("id") id: Int): Response<TiposDto>
 
 
     @GET("api/Prioridades")
     suspend fun getPrioridades(): List<PrioridadesDto>
 
     @POST("api/Prioridades")
-    suspend fun postPrioridades(@Body prioridad: PrioridadesDto): Response<PrioridadesDto>
+    suspend fun postPrioridad(@Body prioridad: PrioridadesDto): Response<PrioridadesDto>
 
     @GET("api/Prioridades/{id}")
-    suspend fun getPrioridadesById(@Path("id") id: Int): PrioridadesDto?
+    suspend fun getPrioridadById(@Path("id") id: Int): PrioridadesDto?
 
     @PUT("api/Prioridades/{id}")
-    suspend fun updatePrioridades(
+    suspend fun putPrioridad(
         @Path("id") id: Int,
         @Body newPrioridad: PrioridadesDto
     ): Response<PrioridadesDto>
 
     @DELETE("api/Prioridades/{id}")
-    suspend fun deletePrioridades(@Path("id") id: Int): Response<PrioridadesDto>
+    suspend fun deletePrioridad(@Path("id") id: Int): Response<PrioridadesDto>
 
 
     @GET("api/Estatus")
@@ -87,7 +94,7 @@ interface TicketsApi {
     suspend fun getEstatusById(@Path("id") id: Int): EstatusDto?
 
     @PUT("api/Estatus/{id}")
-    suspend fun updateEstatus(
+    suspend fun putEstatus(
         @Path("id") id: Int,
         @Body newEstatus: EstatusDto
     ): Response<EstatusDto>
@@ -112,7 +119,7 @@ interface TicketsApi {
     ): ConfiguracionesDto?
 
     @PUT("api/Configuraciones/{id}")
-    suspend fun updateConfig(
+    suspend fun putConfig(
         @Path("id") id: Int,
         @Body config: ConfiguracionesDto
     ): Response<ConfiguracionesDto>
@@ -124,11 +131,17 @@ interface TicketsApi {
     @GET("api/Clientes")
     suspend fun getClientes(): List<ClienteDto>
 
+    @GET("api/Clientes/Top5Respondidos/{id}")
+    suspend fun getTop5ClientesRespondieron(@Path("id") id: Int): List<ClienteDto>
+
+    @GET("api/Clientes/TopRespondidosPor_Mi/{id}")
+    suspend fun getTop5ClientesRespondidos(@Path("id") id: Int): List<ClienteDto>
+
     @POST("api/Clientes")
-    suspend fun postClientes(@Body cliente: ClienteDto): Response<ClienteDto>
+    suspend fun postCliente(@Body cliente: ClienteDto): Response<ClienteDto>
 
     @GET("api/Clientes/{id}")
-    suspend fun getClientesById(@Path("id") id: Int): ClienteDto?
+    suspend fun getClienteById(@Path("id") id: Int): ClienteDto?
 
     @GET("api/Clientes/{nombre},{clave}")
     suspend fun getCliente(
@@ -137,13 +150,19 @@ interface TicketsApi {
     ): ClienteDto?
 
     @PUT("api/Clientes/{id}")
-    suspend fun updateClientes(
+    suspend fun putCliente(
         @Path("id") id: Int,
         @Body newCliente: ClienteDto
     ): Response<ClienteDto>
 
     @DELETE("api/Clientes/{id}")
     suspend fun deleteClientes(@Path("id") id: Int): Response<ClienteDto>
+    @POST("api/Respuestas")
+    suspend fun postRespuesta(@Body respuesta: RespuestaDto): Response<RespuestaDto>
 
+    @GET("api/Respuestas/{id}")
+    suspend fun getRespuestaById(@Path("id") id: Int): RespuestaDto?
+    @GET("api/Respuestas/")
+    suspend fun getRespuestas(): List<RespuestaDto>
 
 }

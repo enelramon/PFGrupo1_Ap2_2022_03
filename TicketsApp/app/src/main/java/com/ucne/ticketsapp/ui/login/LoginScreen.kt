@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ucne.ticketsapp.R
-import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.util.NoConnectionDialog
 import com.ucne.ticketsapp.util.haveNetwork
 import com.ucne.ticketsapp.util.noRippleClickable
@@ -35,7 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    login: (ClienteDto, Boolean) -> Unit
+    login: (Int, Boolean) -> Unit
 ) {
     var clicksCounter by remember { mutableStateOf(0) }
     var withNet by remember { mutableStateOf(true) }
@@ -176,14 +175,14 @@ fun LoginScreen(
 
                 Button(
                     onClick = {
-                        if (viewModel.login() == null) {
+                        if (viewModel.login() == 0) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     "No se pudo logear. Por favor revise sus credenciales."
                                 )
                             }
                         } else {
-                            login(viewModel.login()!!, uiState.value.adminMode)
+                            login(viewModel.login(), uiState.value.adminMode)
                         }
                     },
                     modifier = Modifier

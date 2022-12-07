@@ -9,57 +9,89 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.ucne.ticketsapp.data.remote.dto.ClienteDto
-import com.ucne.ticketsapp.data.remote.dto.TicketsDto
 import com.ucne.ticketsapp.ui.components.*
 import com.ucne.ticketsapp.ui.home.HomeScreen
 import com.ucne.ticketsapp.ui.theme.TicketsAppLoggedTheme
 import com.ucne.ticketsapp.ui.ticket.TicketListScreen
 import com.ucne.ticketsapp.ui.ticket.TicketScreen
+import com.ucne.ticketsapp.ui.ticket.reply.ReplyTicketDialog
 import com.ucne.ticketsapp.util.Screen
 import com.ucne.ticketsapp.util.filtrosTickets
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainLayout(
-    user: ClienteDto,
+    userId: Int,
     inAdminMode: Boolean,
     navHostCont: NavHostController,
     viewModel: MainViewModel = hiltViewModel()
 ) {
+    remember {
+        viewModel.setCliente(userId)
+        0
+    }
 
-    viewModel.setCliente(user)
     val colorUiState by viewModel.configUiState.collectAsState()
-    TicketsAppLoggedTheme(userColor = colorUiState.currentConfig) {
-        var selectedCase by remember { mutableStateOf(0) }
-        var lastSelectedCase by remember { mutableStateOf(0) }
-        var navRailExpanded by remember { mutableStateOf(false) }
-        var selectedTicketOption by remember { mutableStateOf(-1) }
-        var ticketFilterSelected by remember { mutableStateOf(0) }
+    val clienteUiState by viewModel.clientUiState.collectAsState()
 
-        val ticketsListUiState by viewModel.ticketListUiState.collectAsState()
+    TicketsAppLoggedTheme(
+        userColor = colorUiState.currentConfig
+    ) {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+
+        var selectedTicketOption by rememberSaveable { mutableStateOf(-1) }
+        var selectedCase by rememberSaveable { mutableStateOf(0) }
+        var lastSelectedCase by rememberSaveable { mutableStateOf(0) }
+
+        var ticketIdSelected by remember { mutableStateOf(0) }
+
+        var navRailExpanded by rememberSaveable { mutableStateOf(false) }
+        var closeTicketMode by rememberSaveable { mutableStateOf(false) }
+        var editTicketMode by rememberSaveable { mutableStateOf(false) }
+        var replyTicketMode by rememberSaveable { mutableStateOf(false) }
+
+        var ticketFilterSelected by rememberSaveable { mutableStateOf(0) }
 
         CustomDrawer(
-            user = user,
-            isAdminMode = inAdminMode,
-            navToClientes = { selectedCase = 2 },
+            userId = userId,
+            user = clienteUiState.nombres,
             navToHome = { selectedCase = 0 },
             navToLogin = { navHostCont.navigate(Screen.LoginScreen.ruta) },
-            navToTickets = { selectedCase = 1 }) {
+            isAdminMode = inAdminMode,
+            navToTickets = { selectedCase = 1 },
+            navToClientes = { selectedCase = 2 }
+        ) {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     when (selectedCase) {
                         1 -> {
                             TopBar(
-                                title = "Tickets",
+                                title = when (selectedTicketOption) {
+                                    5 -> {
+                                        "Tickets (Modo responder)"
+                                    }
+                                    2 -> {
+                                        "Edición de Tickets"
+                                    }
+                                    1 -> {
+                                        "Creación de Tickets"
+                                    }
+                                    else -> {
+                                        "Tickets"
+                                    }
+                                },
                                 filtros = if (selectedTicketOption != 1) {
                                     filtrosTickets
                                 } else null,
@@ -98,17 +130,14 @@ fun MainLayout(
                             1 -> {
                                 Column(
                                     modifier = Modifier
-                                        .height(500.dp)
-                                        .offset(y = (-80).dp, x = 15.dp)
-
+                                        .height(400.dp)
                                 ) {
                                     NavigationRail(
-                                        header = {
+                                        header = {//Crear ticket
                                             FloatingActionButton(onClick = {
                                                 selectedTicketOption = 1
                                                 navRailExpanded = false
                                             }) {
-
                                                 Icon(
                                                     imageVector = Icons.Default.AddCircle,
                                                     contentDescription = null
@@ -116,16 +145,14 @@ fun MainLayout(
                                             }
                                         },
                                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                        modifier = Modifier.clip(
-                                            RoundedCornerShape(size = 20.dp)
-                                        )
+                                        modifier = Modifier.clip(RoundedCornerShape(size = 20.dp))
                                     ) {
                                         Column(
                                             modifier = Modifier.clip(
                                                 RoundedCornerShape(size = 20.dp)
                                             )
                                         ) {
-                                            NavigationRailItem(
+                                            NavigationRailItem(//Busqueda
                                                 icon = {
                                                     Icon(
                                                         imageVector = Icons.Default.Search,
@@ -136,51 +163,41 @@ fun MainLayout(
                                                 selected = selectedTicketOption == 0,
                                                 onClick = {
                                                     selectedTicketOption = 0
+                                                    editTicketMode = false
+                                                    closeTicketMode = false
+                                                    replyTicketMode = false
                                                     navRailExpanded = false
                                                 },
-                                                modifier = Modifier
-                                                    .padding(vertical = 10.dp)
+                                                modifier = Modifier.padding(vertical = 10.dp)
                                             )
                                             NavigationRailItem(
                                                 icon = {
                                                     Icon(
-                                                        imageVector = Icons.Default.Quickreply,
+                                                        imageVector = Icons.Default.Edit,
                                                         contentDescription = null
                                                     )
                                                 },
-                                                label = { Text("Quick Reply") },
+                                                label = { Text("Editar") },
                                                 selected = selectedTicketOption == 2,
                                                 onClick = {
                                                     selectedTicketOption = 2
+                                                    editTicketMode = true
+                                                    closeTicketMode = false
+                                                    replyTicketMode = false
                                                     navRailExpanded = false
+                                                    scope.launch {
+                                                        val job = scope.launch {
+                                                            snackbarHostState.showSnackbar(
+                                                                "Presione el ticket a editar",
+                                                                duration = SnackbarDuration.Indefinite,
+                                                            )
+                                                        }
+                                                        delay(1050)
+                                                        job.cancel()
+                                                    }
                                                 },
-                                                modifier = Modifier
-                                                    .padding(vertical = 10.dp)
+                                                modifier = Modifier.padding(vertical = 10.dp)
                                             )
-
-                                            NavigationRailItem(
-                                                icon = {
-                                                    Icon(
-                                                        imageVector = Icons.Default.ReplyAll,
-                                                        contentDescription = null
-                                                    )
-                                                },
-                                                label = {
-                                                    Text(
-                                                        "Responder todos",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                selected = selectedTicketOption == 3,
-                                                onClick = {
-                                                    selectedTicketOption = 3
-                                                    navRailExpanded = false
-                                                },
-                                                modifier = Modifier
-
-                                                    .padding(vertical = 10.dp)
-                                            )
-
 
                                             NavigationRailItem(
                                                 icon = {
@@ -190,10 +207,22 @@ fun MainLayout(
                                                     )
                                                 },
                                                 label = { Text("Responder") },
-                                                selected = selectedTicketOption == 4,
+                                                selected = replyTicketMode,
                                                 onClick = {
-                                                    selectedTicketOption = 4
+                                                    editTicketMode = false
+                                                    closeTicketMode = false
                                                     navRailExpanded = false
+                                                    scope.launch {
+                                                        val job = scope.launch {
+                                                            snackbarHostState.showSnackbar(
+                                                                "Presione el ticket a responder",
+                                                                duration = SnackbarDuration.Indefinite,
+                                                            )
+                                                        }
+                                                        delay(1050)
+                                                        job.cancel()
+                                                    }
+                                                    replyTicketMode = true
                                                 },
                                                 modifier = Modifier
                                                     .padding(vertical = 10.dp)
@@ -207,45 +236,77 @@ fun MainLayout(
                                                     )
                                                 },
                                                 label = { Text("Cerrar") },
-                                                selected = selectedTicketOption == 5,
+                                                selected = selectedTicketOption == 6,
                                                 onClick = {
-                                                    selectedTicketOption = 5
+                                                    selectedTicketOption = 6
+                                                    editTicketMode = false
+                                                    closeTicketMode = true
+                                                    replyTicketMode = false
                                                     navRailExpanded = false
+                                                    scope.launch {
+                                                        val job = scope.launch {
+                                                            snackbarHostState.showSnackbar(
+                                                                "Presione el ticket a cerrar",
+                                                                duration = SnackbarDuration.Indefinite,
+                                                            )
+                                                        }
+                                                        delay(1050)
+                                                        job.cancel()
+                                                    }
                                                 },
                                                 modifier = Modifier
                                                     .padding(vertical = 10.dp)
                                             )
                                         }
-
                                     }
                                 }
                             }//TICKETS
                             2 -> {
-                                Column(verticalArrangement = Arrangement.Center) {
-
-                                }
+                                Column(verticalArrangement = Arrangement.Center) {/*NavRail de clientes*/ }
                             }//CLIENTES
                         }
                     }
                 }
             ) {
-
                 when (selectedCase) {
                     1 -> {//Tickets
                         when (selectedTicketOption) {
+                            //0 abrir la busqueda
                             1 -> {
                                 TicketScreen(
-                                    onPressCancel = { selectedTicketOption = -1 },
-                                    user = user
+                                    ticketId = ticketIdSelected,
+                                    onPressCancel = {
+                                        selectedTicketOption = -1
+                                        ticketIdSelected = 0
+                                    },
+                                    userId = userId
                                 )
                             }
+                            5 -> {
+                                ReplyTicketDialog(
+                                    ticketId = ticketIdSelected,
+                                    clienteId = clienteUiState.clienteId
+                                ) {
+                                    selectedTicketOption = -1
+                                }
+                            }
                             else -> {
-                                val selectedTickets: List<TicketsDto> = emptyList()
                                 TicketListScreen(
-                                    onReplyModeChange = {},
-                                    replyMode = selectedTicketOption == 2
+                                    onRowDoubleTap = {
+                                        ticketIdSelected = it
+                                        selectedTicketOption = 5
+                                    },
+                                    onRowSelect = { ticketId ->
+                                        ticketIdSelected = ticketId
+                                        if (editTicketMode) {
+                                            selectedTicketOption = 1
+                                        } else if (closeTicketMode) {
+                                            viewModel.closeTicket(ticketId)
+                                        }else if(replyTicketMode){
+                                            selectedTicketOption = 5
+                                        }
+                                    }
                                 )
-
                             }
                         }
                     }
@@ -255,11 +316,10 @@ fun MainLayout(
                     else -> {
                         if (selectedCase == 3) {
                             ProfileDialog(
-                                lastSelectedModule = lastSelectedCase,
                                 viewModel = viewModel
-                            ) { selectedCase = it }
+                            ) { selectedCase = lastSelectedCase }
                         } else if (selectedCase == 0) {
-                            HomeScreen(viewModel)
+                            HomeScreen()
                         }
                     }
                 }

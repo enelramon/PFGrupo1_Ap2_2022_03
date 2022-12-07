@@ -1,31 +1,28 @@
 package com.ucne.ticketsapp.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.data.remote.dto.ConfiguracionesDto
 import com.ucne.ticketsapp.data.remote.dto.RespuestaDto
 import com.ucne.ticketsapp.data.remote.dto.TicketsDto
-import com.ucne.ticketsapp.data.repository.ClientesRepository
-import com.ucne.ticketsapp.data.repository.RemoteConfigRepository
-import com.ucne.ticketsapp.data.repository.SistemasRepository
-import com.ucne.ticketsapp.data.repository.TicketsRepository
-import com.ucne.ticketsapp.ui.states.ClientesListUiState
+import com.ucne.ticketsapp.data.repository.*
 import com.ucne.ticketsapp.ui.states.TicketListUiState
 import com.ucne.ticketsapp.util.UserConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
+
 
 data class ProfileUiState(
     val themeIndex: Int = 0,
     val colorIndex: Int = 0
 )
-
 
 data class ConfigUiState(
     val currentConfig: UserConfig = UserConfig()
@@ -46,36 +43,33 @@ class MainViewModel @Inject constructor(
     private val ticketsRepository: TicketsRepository,
     private val sistemaRepository: SistemasRepository,
     private val configRepository: RemoteConfigRepository,
+    private val respuestaRepository : RespuestaRepository,
 ) : ViewModel() {
+
+    private val listTicketUiState = MutableStateFlow(TicketListUiState())
 
     var profileUiState = MutableStateFlow(ProfileUiState())
         private set
+
     var clientUiState = MutableStateFlow(ClienteUiState())
         private set
 
     var configUiState = MutableStateFlow(ConfigUiState())
         private set
 
-    private val listTicketUiState = MutableStateFlow(TicketListUiState())
-    val ticketListUiState: StateFlow<TicketListUiState> = listTicketUiState.asStateFlow()
-
-    private val listClienteUiState = MutableStateFlow(ClientesListUiState())
-    val clienteListUiState: StateFlow<ClientesListUiState> = listClienteUiState.asStateFlow()
-
     init {
         viewModelScope.launch {
             listTicketUiState.update {
-                it.copy(list = ticketsRepository.getTickets())
-            }
-            listClienteUiState.update {
-                it.copy(list = clientRepository.getClientes())
+                it.copy(
+                    list = ticketsRepository.getTickets()
+                )
             }
         }
     }
 
-    fun setCliente(user: ClienteDto) {
+    fun setCliente(user: Int) {
         viewModelScope.launch {
-            clientRepository.getClientesById(user.clienteId)?.let {
+            clientRepository.getClienteById(user)?.let {
                 clientUiState.value = clientUiState.value.copy(
                     clienteId = it.clienteId,
                     nombres = it.nombres,
@@ -94,7 +88,6 @@ class MainViewModel @Inject constructor(
                 setProfileColor(config.colorSchemeIndex)
             }
         }
-
     }
 
     fun setProfileTheme(index: Int) {
@@ -111,7 +104,7 @@ class MainViewModel @Inject constructor(
 
     fun saveProfile() {
         viewModelScope.launch {
-            val clienteCopiar = clientRepository.getClientesById(clientUiState.value.clienteId)
+            val clienteCopiar = clientRepository.getClienteById(clientUiState.value.clienteId)
             val config = configRepository.getConfigByConfig(
                 profileUiState.value.themeIndex,
                 profileUiState.value.colorIndex
@@ -122,7 +115,7 @@ class MainViewModel @Inject constructor(
                 )
             }
             if (clienteCopiar != null) {
-                clientRepository.updateClientes(
+                clientRepository.putCliente(
                     id = clientUiState.value.clienteId,
                     ClienteDto(
                         clienteId = clienteCopiar.clienteId,
@@ -131,6 +124,30 @@ class MainViewModel @Inject constructor(
                         configuracionId = config!!.configuracionId,
                         tickets = clienteCopiar.tickets,
                         respuestas = clienteCopiar.respuestas
+                    )
+                )
+            }
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun closeTicket(ticketId: Int) {
+        viewModelScope.launch {
+            val lastTicket = ticketsRepository.getTicketsById(ticketId)
+            if (lastTicket != null) {
+                ticketsRepository.updateTickets(
+                    lastTicket.ticketId,
+                    TicketsDto(
+                        ticketId = lastTicket.ticketId,
+                        fechaCreacion = lastTicket.fechaCreacion,
+                        clienteId = lastTicket.clienteId,
+                        sistemaId = lastTicket.sistemaId,
+                        tipoId = lastTicket.tipoId,
+                        prioridadId = lastTicket.prioridadId,
+                        estatusId = 3,//cerrado
+                        especificaciones = lastTicket.especificaciones,
+                        fechaFinalizado = LocalDate.now().toString(),
+                        orden = 1,
+                        respuestas = lastTicket.respuestas,
                     )
                 )
             }

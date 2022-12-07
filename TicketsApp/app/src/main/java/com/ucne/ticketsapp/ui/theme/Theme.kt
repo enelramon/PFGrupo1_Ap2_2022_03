@@ -83,7 +83,7 @@ fun TicketsAppLoggedTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         userColor.theme == 1 -> customDarkColorScheme(userColor.colorIndex)
-        userColor.theme == 0 -> customLightColorScheme(userColor.colorIndex)
+        userColor.theme == 0 -> customLightColorsScheme(userColor.colorIndex)
         userColor.theme == 2 -> customSystemColorScheme(
             darkTheme = isSystemInDarkTheme(),
             userColor.colorIndex

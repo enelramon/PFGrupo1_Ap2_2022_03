@@ -1,5 +1,6 @@
 package com.ucne.ticketsapp.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.ucne.ticketsapp.data.remote.dto.ClienteDto
 import com.ucne.ticketsapp.util.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDrawer(
-    user: ClienteDto, isAdminMode: Boolean,
+    userId: Int,
+    user: String,
+    isAdminMode: Boolean,
     navToHome: () -> Unit,
     navToTickets: () -> Unit,
     navToClientes: () -> Unit,
@@ -25,6 +27,7 @@ fun CustomDrawer(
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
         drawerContent = {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -39,12 +42,12 @@ fun CustomDrawer(
                         )
                         Column(Modifier.padding(start = 10.dp)) {
                             Text(
-                                text = user.nombres,
+                                text = user,
                                 style = MaterialTheme.typography.headlineMedium,
                                 modifier = Modifier.padding(bottom = 5.dp)
                             )
                             Text(
-                                text = "ID: #" + user.clienteId,
+                                text = "ID: #$userId",
                                 style = MaterialTheme.typography.headlineSmall
                             )
                             if (isAdminMode) {

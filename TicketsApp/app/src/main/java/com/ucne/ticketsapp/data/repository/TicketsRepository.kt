@@ -16,10 +16,16 @@ class TicketsRepository @Inject constructor(
             throw e
         }
     }
-
+    suspend fun getTop5Tickets(id : Int): List<TicketsDto> {
+        try {
+            return api.getTop5Tickets(id)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
     suspend fun postTickets(ticketsDto: TicketsDto): Response<TicketsDto> {
         try {
-            return api.postTickets(ticketsDto)
+            return api.postTicket(ticketsDto)
         } catch (e: Exception) {
             Log.i("Ticket", e.message!!)
             throw e
@@ -28,7 +34,7 @@ class TicketsRepository @Inject constructor(
 
     suspend fun getTicketsById(id: Int): TicketsDto? {
         try {
-            return api.getTicketsById(id)
+            return api.getTicketById(id)
         } catch (e: Exception) {
             throw e
         }
@@ -37,7 +43,7 @@ class TicketsRepository @Inject constructor(
     //PUT
     suspend fun updateTickets(id: Int, newTicket: TicketsDto): Response<TicketsDto> {
         try {
-            return api.updateTickets(id, newTicket)
+            return api.putTicket(id, newTicket)
         } catch (e: Exception) {
             throw e
         }

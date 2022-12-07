@@ -16,17 +16,32 @@ class ClientesRepository @Inject constructor(
         }
     }
 
-    suspend fun postClientes(clienteDto: ClienteDto): Response<ClienteDto> {
+    suspend fun postCliente(clienteDto: ClienteDto): Response<ClienteDto> {
         try {
-            return api.postClientes(clienteDto)
+            return api.postCliente(clienteDto)
         } catch (e: Exception) {
             throw e
         }
     }
 
-    suspend fun getClientesById(id: Int): ClienteDto? {
+    suspend fun getTop5ClientesRespondieron(id : Int): List<ClienteDto> {
         try {
-            return api.getClientesById(id)
+            return api.getTop5ClientesRespondieron(id)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun getTop5ClientesRespondidos(id : Int): List<ClienteDto> {
+        try {
+            return api.getTop5ClientesRespondidos(id)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+    suspend fun getClienteById(id: Int): ClienteDto? {
+        try {
+            return api.getClienteById(id)
         } catch (e: Exception) {
             throw e
         }
@@ -41,16 +56,15 @@ class ClientesRepository @Inject constructor(
         return null
     }
 
-    //PUT
-    suspend fun updateClientes(id: Int, newCliente: ClienteDto): Response<ClienteDto> {
+    suspend fun putCliente(id: Int, newCliente: ClienteDto): Response<ClienteDto> {
         try {
-            return api.updateClientes(id, newCliente)
+            return api.putCliente(id, newCliente)
         } catch (e: Exception) {
             throw e
         }
     }
 
-    suspend fun deleteClientes(id: Int): Response<ClienteDto> {
+    suspend fun deleteCliente(id: Int): Response<ClienteDto> {
         try {
             return api.deleteClientes(id)
         } catch (e: Exception) {

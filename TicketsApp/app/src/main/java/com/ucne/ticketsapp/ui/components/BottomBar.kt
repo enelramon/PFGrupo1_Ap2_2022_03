@@ -1,32 +1,10 @@
-@file:Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
-    "unused", "unused", "unused", "unused"
-)
-
 package com.ucne.ticketsapp.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Sell
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -56,6 +34,7 @@ fun BottomBar(
                 modifier = Modifier
                     .noRippleClickable { onSelectedCaseChange(1) }
                     .fillMaxHeight()
+                    .widthIn(min = 60.dp)
                     .padding(start = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -70,6 +49,7 @@ fun BottomBar(
 
             Column(
                 modifier = Modifier
+                    .widthIn(min = 60.dp)
                     .noRippleClickable { onSelectedCaseChange(0) }
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,6 +68,7 @@ fun BottomBar(
                     modifier = Modifier
                         .noRippleClickable { onSelectedCaseChange(2) }
                         .fillMaxHeight(),
+
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -110,10 +91,10 @@ fun BottomBar(
             ) {
 
                 if (selectedCase == 3) {
-                    SelectedIconWithText(icon = Icons.Default.Person, text = "Perfíl")
+                    SelectedIconWithText(icon = Icons.Default.ManageAccounts, text = "Perfíl")
                 } else {
-                    Icon(imageVector = Icons.Default.Person, contentDescription = "Perfíl")
-                    Text(text = "Perfil")
+                    Icon(imageVector = Icons.Default.ManageAccounts, contentDescription = "Configuración")
+                    Text(text = "Perfíl")
                 }
             }
         }

@@ -40,3 +40,50 @@ val BlueGrey90 = Color(0xFFD5DEF0)
 val BlueGrey80 = Color(0xFFC2CADC)
 val BlueGrey40 = Color(0xFF39435E)
 val BlueGrey10 = Color(0xFF252A38)
+
+val YellowAlt90 = Color(0xFFFFF0D3)
+val YellowAlt80 = Color(0xFFEFDBB8)
+val YellowAlt40 = Color(0xFFA3844D)
+val YellowAlt10 = Color(0xFF5A4926)
+
+val Yellow90 = Color(0xFFFBF8EB)
+val Yellow80 = Color(0xFFEEE086)
+val Yellow40 = Color(0xFFCCAA43)
+val Yellow10 = Color(0xFF605015)
+
+val YellowGrey90 = Color(0xFFF0EFD5)
+val YellowGrey80 = Color(0xFFDCD8C2)
+val YellowGrey40 = Color(0xFF5E5A39)
+val YellowGrey10 = Color(0xFF383525)
+
+
+val OrangeAlt90 = Color(0xFFFFDFD3)
+val OrangeAlt80 = Color(0xFFDA9D82)
+val OrangeAlt40 = Color(0xFFDA693E)
+val OrangeAlt10 = Color(0xFF693113)
+
+val Orange90 = Color(0xFFFFECE0)
+val Orange80 = Color(0xFFFFE1BC)
+val Orange40 = Color(0xFFB16532)
+val Orange10 = Color(0xFF603515)
+
+val OrangeGrey90 = Color(0xFFF0E2D5)
+val OrangeGrey80 = Color(0xFFDCCFC2)
+val OrangeGrey40 = Color(0xFF5E4C39)
+val OrangeGrey10 = Color(0xFF382E25)
+
+
+val RedAlt90 = Color(0xFFFFD8D3)
+val RedAlt80 = Color(0xFFDF9083)
+val RedAlt40 = Color(0xFFCE5454)
+val RedAlt10 = Color(0xFF461C1B)
+
+val Red90 = Color(0xFFFFCACA)
+val Red80 = Color(0xFFE46A6A)
+val Red40 = Color(0xFF963030)
+val Red10 = Color(0xFF5F1616)
+
+val RedGrey90 = Color(0xFFF0D5D5)
+val RedGrey80 = Color(0xFFC2A5A5)
+val RedGrey40 = Color(0xFF5E3939)
+val RedGrey10 = Color(0xFF382525)

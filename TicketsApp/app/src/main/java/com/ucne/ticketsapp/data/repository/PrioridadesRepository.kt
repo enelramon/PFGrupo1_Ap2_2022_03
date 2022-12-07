@@ -18,7 +18,7 @@ class PrioridadesRepository @Inject constructor(
 
     suspend fun postEstatus(prioridadesDto: PrioridadesDto): Response<PrioridadesDto> {
         try {
-            return api.postPrioridades(prioridadesDto)
+            return api.postPrioridad(prioridadesDto)
         } catch (e: Exception) {
             throw e
         }
@@ -26,7 +26,7 @@ class PrioridadesRepository @Inject constructor(
 
     suspend fun getPrioridadesById(id: Int): PrioridadesDto? {
         try {
-            return api.getPrioridadesById(id)
+            return api.getPrioridadById(id)
         } catch (e: Exception) {
             throw e
         }
@@ -35,7 +35,7 @@ class PrioridadesRepository @Inject constructor(
     //PUT
     suspend fun updatePrioridades(id: Int, newPrioridades: PrioridadesDto): Response<PrioridadesDto> {
         try {
-            return api.updatePrioridades(id, newPrioridades)
+            return api.putPrioridad(id, newPrioridades)
         } catch (e: Exception) {
             throw e
         }
@@ -43,7 +43,7 @@ class PrioridadesRepository @Inject constructor(
 
     suspend fun deletePrioridades(id: Int): Response<PrioridadesDto> {
         try {
-            return api.deletePrioridades(id)
+            return api.deletePrioridad(id)
         } catch (e: Exception) {
             throw e
         }

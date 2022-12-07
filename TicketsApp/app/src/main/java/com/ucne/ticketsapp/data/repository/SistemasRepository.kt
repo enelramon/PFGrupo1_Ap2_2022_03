@@ -17,9 +17,17 @@ class SistemasRepository @Inject constructor(
         }
     }
 
+    suspend fun getSistemasWithMoreTickets(): List<SistemaDto> {
+        try {
+            return api.getSistemasWithMoreTickets()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun postSistemas(sistemaDto: SistemaDto): Response<SistemaDto> {
         try {
-            return api.postSistemas(sistemaDto)
+            return api.postSistema(sistemaDto)
         } catch (e: Exception) {
             throw e
         }
@@ -27,7 +35,7 @@ class SistemasRepository @Inject constructor(
 
     suspend fun getSistemasById(id: Int): SistemaDto? {
         try {
-            return api.getSistemasById(id)
+            return api.getSistemaById(id)
         } catch (e: Exception) {
             throw e
         }
@@ -36,7 +44,7 @@ class SistemasRepository @Inject constructor(
     //PUT
     suspend fun updateSistemas(id: Int, newSistema: SistemaDto): Response<SistemaDto> {
         try {
-            return api.updateSistemas(id, newSistema)
+            return api.putSistema(id, newSistema)
         } catch (e: Exception) {
             throw e
         }
@@ -44,7 +52,7 @@ class SistemasRepository @Inject constructor(
 
     suspend fun deleteSistemas(id: Int): Response<SistemaDto> {
         try {
-            return api.deleteSistemas(id)
+            return api.deleteSistema(id)
         } catch (e: Exception) {
             throw e
         }

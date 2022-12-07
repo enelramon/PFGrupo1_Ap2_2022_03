@@ -1,30 +1,34 @@
 package com.ucne.ticketsapp.ui.ticket
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.AppSettingsAlt
+import androidx.compose.material.icons.outlined.Scale
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ucne.ticketsapp.data.remote.dto.ClienteDto
-import com.ucne.ticketsapp.ui.components.CustomDatePickerDialog
 import com.ucne.ticketsapp.util.noRippleClickable
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TicketScreen(
-    editMode: Boolean = false,
-    user: ClienteDto,
+    ticketId: Int,
+    userId: Int,
     onPressCancel: () -> Unit,
     viewModel: TicketViewModel = hiltViewModel()
 ) {
@@ -34,26 +38,30 @@ fun TicketScreen(
     val prioridades = viewModel.prioridadesListUiState.collectAsState()
     val tipos = viewModel.tipoListUiState.collectAsState()
 
-    viewModel.setCliente(user)
+    remember {
+        viewModel.find(ticketId)
+        0
+    }
+    remember {
+        viewModel.setCliente(userId)
+        0
+    }
 
+    val context = LocalContext.current
     var sistemaExpanded by remember { mutableStateOf(false) }
     var tipoExpanded by remember { mutableStateOf(false) }
     var prioridadExpanded by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    if (showDatePicker) {
-        CustomDatePickerDialog("Seleccione la fecha", { viewModel.setDate(it) }) { showDatePicker = false }
-    }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 60.dp, horizontal = 8.dp).padding(bottom = 20.dp),
+            .padding(vertical = 60.dp, horizontal = 8.dp)
+            .padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -80,6 +88,12 @@ fun TicketScreen(
                             contentDescription = null
                         )
                     },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.AppSettingsAlt,
+                            contentDescription = null
+                        )
+                    },
                     onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,7 +101,6 @@ fun TicketScreen(
                         .noRippleClickable {
                             sistemaExpanded = true
                         }
-
                 )
                 DropdownMenu(
                     expanded = sistemaExpanded,
@@ -95,7 +108,6 @@ fun TicketScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
-
                 ) {
                     sistemas.value.list.forEach { sistema ->
                         DropdownMenuItem(
@@ -137,6 +149,12 @@ fun TicketScreen(
                             contentDescription = null
                         )
                     },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Category,
+                            contentDescription = null
+                        )
+                    },
                     onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
@@ -173,39 +191,6 @@ fun TicketScreen(
                     }
                 }
 
-
-                if (editMode) {
-                    OutlinedTextField(
-                        label = { Text("Fecha") },
-                        value = uiState.value.fecha,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            disabledBorderColor = Color(
-                                0xFF7A7A7A
-                            ),
-                            disabledLabelColor = Color(
-                                0xFF7A7A7A
-                            ),
-                            disabledTextColor = Color(
-                                0xFF7A7A7A
-                            )
-                        ),
-                        enabled = false, readOnly = true,
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = null
-                            )
-                        },
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .noRippleClickable {
-                                showDatePicker = true
-                            }
-
-                    )
-                }
                 OutlinedTextField(
                     label = { Text("Prioridad") },
                     value = uiState.value.prioridad,
@@ -224,6 +209,12 @@ fun TicketScreen(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Scale,
                             contentDescription = null
                         )
                     },
@@ -282,16 +273,26 @@ fun TicketScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             OutlinedButton(
-                onClick = onPressCancel
+                onClick = {
+                    onPressCancel()
+                    viewModel.clean()
+                }
             ) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "Cancelar")
                 Text(text = "Cancelar")
             }
-
             Button(
                 onClick = {
-                    viewModel.save()
-                    onPressCancel()
+                    if (viewModel.canSave()) {
+                        viewModel.save()
+                        onPressCancel()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Por favor complete todos los campos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             ) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = "Aceptar")

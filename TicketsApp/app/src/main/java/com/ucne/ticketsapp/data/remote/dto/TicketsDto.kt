@@ -1,7 +1,6 @@
 package com.ucne.ticketsapp.data.remote.dto
 
 import com.squareup.moshi.JsonClass
-import com.ucne.ticketsapp.ui.states.TicketUiState
 
 
 @JsonClass(generateAdapter = true)
