@@ -28,6 +28,19 @@ namespace Ticket.Api.Controllers
             return await _context.Tickets.ToListAsync();
         }
 
+
+        // GET: api/Tickets/Top5Tickets/1
+        [HttpGet("Top5Tickets/{id}")]
+        public async Task<ActionResult<IEnumerable<Tickets>>> GetTicketsByClientId(int id)
+        {
+            //5 tickets con mas respuestas
+            return await _context.Tickets.
+                Where(t => t.ClienteId==id).
+                OrderBy(t=>t.Respuestas.Count).
+                Take(5).
+                ToListAsync();
+        }
+
         // GET: api/Tickets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tickets>> GetTickets(int id)

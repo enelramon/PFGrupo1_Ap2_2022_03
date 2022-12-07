@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class TiposDto(
     val tipoId: Int,
-    val tipo1: String,
-    val eTickets: List<TicketsDto>
+    val tipo: String,
+    val tickets: List<TicketsDto>
 )

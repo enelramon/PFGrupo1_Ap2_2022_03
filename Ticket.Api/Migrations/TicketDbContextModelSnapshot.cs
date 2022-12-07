@@ -23,6 +23,12 @@ namespace Ticket.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Clave")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ConfiguracionId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Nombres")
                         .HasMaxLength(100)
                         .IsUnicode(false)
@@ -32,6 +38,163 @@ namespace Ticket.Api.Migrations
                         .HasName("PK__Clientes__71ABD087B375C419");
 
                     b.ToTable("Clientes");
+
+                    b.HasData(
+                        new
+                        {
+                            ClienteId = 1,
+                            Clave = "Samuel23",
+                            ConfiguracionId = 13,
+                            Nombres = "Samuel"
+                        },
+                        new
+                        {
+                            ClienteId = 2,
+                            Clave = "Rafa23",
+                            ConfiguracionId = 13,
+                            Nombres = "Rafa"
+                        },
+                        new
+                        {
+                            ClienteId = 3,
+                            Clave = "Jeison23",
+                            ConfiguracionId = 13,
+                            Nombres = "Jeison"
+                        },
+                        new
+                        {
+                            ClienteId = 4,
+                            Clave = "Enel23",
+                            ConfiguracionId = 13,
+                            Nombres = "Enel"
+                        });
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Configuraciones", b =>
+                {
+                    b.Property<int>("ConfiguracionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ColorSchemeIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Theme")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ConfiguracionId");
+
+                    b.ToTable("Configuraciones");
+
+                    b.HasData(
+                        new
+                        {
+                            ConfiguracionId = 1,
+                            ColorSchemeIndex = 0,
+                            Theme = 0
+                        },
+                        new
+                        {
+                            ConfiguracionId = 2,
+                            ColorSchemeIndex = 1,
+                            Theme = 0
+                        },
+                        new
+                        {
+                            ConfiguracionId = 3,
+                            ColorSchemeIndex = 2,
+                            Theme = 0
+                        },
+                        new
+                        {
+                            ConfiguracionId = 4,
+                            ColorSchemeIndex = 3,
+                            Theme = 0
+                        },
+                        new
+                        {
+                            ConfiguracionId = 5,
+                            ColorSchemeIndex = 4,
+                            Theme = 0
+                        },
+                        new
+                        {
+                            ConfiguracionId = 6,
+                            ColorSchemeIndex = 5,
+                            Theme = 0
+                        },
+                        new
+                        {
+                            ConfiguracionId = 7,
+                            ColorSchemeIndex = 0,
+                            Theme = 1
+                        },
+                        new
+                        {
+                            ConfiguracionId = 8,
+                            ColorSchemeIndex = 1,
+                            Theme = 1
+                        },
+                        new
+                        {
+                            ConfiguracionId = 9,
+                            ColorSchemeIndex = 2,
+                            Theme = 1
+                        },
+                        new
+                        {
+                            ConfiguracionId = 10,
+                            ColorSchemeIndex = 3,
+                            Theme = 1
+                        },
+                        new
+                        {
+                            ConfiguracionId = 11,
+                            ColorSchemeIndex = 4,
+                            Theme = 1
+                        },
+                        new
+                        {
+                            ConfiguracionId = 12,
+                            ColorSchemeIndex = 5,
+                            Theme = 1
+                        },
+                        new
+                        {
+                            ConfiguracionId = 13,
+                            ColorSchemeIndex = 0,
+                            Theme = 2
+                        },
+                        new
+                        {
+                            ConfiguracionId = 14,
+                            ColorSchemeIndex = 1,
+                            Theme = 2
+                        },
+                        new
+                        {
+                            ConfiguracionId = 15,
+                            ColorSchemeIndex = 2,
+                            Theme = 2
+                        },
+                        new
+                        {
+                            ConfiguracionId = 16,
+                            ColorSchemeIndex = 3,
+                            Theme = 2
+                        },
+                        new
+                        {
+                            ConfiguracionId = 17,
+                            ColorSchemeIndex = 4,
+                            Theme = 2
+                        },
+                        new
+                        {
+                            ConfiguracionId = 18,
+                            ColorSchemeIndex = 5,
+                            Theme = 2
+                        });
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Estatus", b =>
@@ -50,6 +213,23 @@ namespace Ticket.Api.Migrations
                         .HasName("PK__Estatus__DE10F58DA375F6EC");
 
                     b.ToTable("Estatus", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            EstatusId = 1,
+                            Estatus1 = "Nuevo"
+                        },
+                        new
+                        {
+                            EstatusId = 2,
+                            Estatus1 = "En proceso"
+                        },
+                        new
+                        {
+                            EstatusId = 3,
+                            Estatus1 = "Cerrado"
+                        });
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Prioridades", b =>
@@ -67,6 +247,66 @@ namespace Ticket.Api.Migrations
                         .HasName("PK__Priorida__3939172E0518F8F3");
 
                     b.ToTable("Prioridades");
+
+                    b.HasData(
+                        new
+                        {
+                            PrioridadId = 1,
+                            Prioridad = "Baja"
+                        },
+                        new
+                        {
+                            PrioridadId = 2,
+                            Prioridad = "Normal"
+                        },
+                        new
+                        {
+                            PrioridadId = 3,
+                            Prioridad = "Media"
+                        },
+                        new
+                        {
+                            PrioridadId = 4,
+                            Prioridad = "Alta"
+                        },
+                        new
+                        {
+                            PrioridadId = 5,
+                            Prioridad = "Emergencia"
+                        });
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Respuestas", b =>
+                {
+                    b.Property<int>("RespuestaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClienteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClientesClienteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Respuesta")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TicketsTicketId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RespuestaId");
+
+                    b.HasIndex("ClientesClienteId");
+
+                    b.HasIndex("TicketsTicketId");
+
+                    b.ToTable("Respuestas");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Sistemas", b =>
@@ -75,7 +315,7 @@ namespace Ticket.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Sistema1")
+                    b.Property<string>("Sistema")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("TEXT")
@@ -85,6 +325,23 @@ namespace Ticket.Api.Migrations
                         .HasName("PK__Sistemas__4C36BB868F17E7A9");
 
                     b.ToTable("Sistemas");
+
+                    b.HasData(
+                        new
+                        {
+                            SistemaId = 1,
+                            Sistema = "Ventas SS"
+                        },
+                        new
+                        {
+                            SistemaId = 2,
+                            Sistema = "SS Office"
+                        },
+                        new
+                        {
+                            SistemaId = 3,
+                            Sistema = "SS Rent Reporter"
+                        });
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Tickets", b =>
@@ -96,6 +353,9 @@ namespace Ticket.Api.Migrations
                     b.Property<int?>("ClienteId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("ClientesClienteId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Especificaciones")
                         .IsUnicode(false)
                         .HasColumnType("TEXT");
@@ -103,7 +363,7 @@ namespace Ticket.Api.Migrations
                     b.Property<int?>("EstatusId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Fecha")
+                    b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("FechaFinalizado")
@@ -115,24 +375,33 @@ namespace Ticket.Api.Migrations
                     b.Property<int?>("PrioridadId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("PrioridadesPrioridadId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("SistemaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("SistemasSistemaId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("TipoId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("TiposTipoId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("TicketId")
                         .HasName("PK__eTicket__712CC6070A90FFD9");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ClientesClienteId");
 
                     b.HasIndex("EstatusId");
 
-                    b.HasIndex("PrioridadId");
+                    b.HasIndex("PrioridadesPrioridadId");
 
-                    b.HasIndex("SistemaId");
+                    b.HasIndex("SistemasSistemaId");
 
-                    b.HasIndex("TipoId");
+                    b.HasIndex("TiposTipoId");
 
                     b.ToTable("eTicket", (string)null);
                 });
@@ -143,7 +412,7 @@ namespace Ticket.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Tipo1")
+                    b.Property<string>("Tipo")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("TEXT")
@@ -153,69 +422,94 @@ namespace Ticket.Api.Migrations
                         .HasName("PK__Tipos__97099EB7224F755C");
 
                     b.ToTable("Tipos");
+
+                    b.HasData(
+                        new
+                        {
+                            TipoId = 1,
+                            Tipo = "Problemas"
+                        },
+                        new
+                        {
+                            TipoId = 2,
+                            Tipo = "Sugerencia"
+                        },
+                        new
+                        {
+                            TipoId = 3,
+                            Tipo = "Soporte Directo"
+                        },
+                        new
+                        {
+                            TipoId = 4,
+                            Tipo = "Otros"
+                        });
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Respuestas", b =>
+                {
+                    b.HasOne("Ticket.Api.Models.Clientes", null)
+                        .WithMany("Respuestas")
+                        .HasForeignKey("ClientesClienteId");
+
+                    b.HasOne("Ticket.Api.Models.Tickets", null)
+                        .WithMany("Respuestas")
+                        .HasForeignKey("TicketsTicketId");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Tickets", b =>
                 {
-                    b.HasOne("Ticket.Api.Models.Clientes", "Cliente")
+                    b.HasOne("Ticket.Api.Models.Clientes", null)
                         .WithMany("Tickets")
-                        .HasForeignKey("ClienteId")
-                        .HasConstraintName("FK__eTicket__Cliente__1CF15040");
+                        .HasForeignKey("ClientesClienteId");
 
-                    b.HasOne("Ticket.Api.Models.Estatus", "Estatus")
-                        .WithMany("ETickets")
-                        .HasForeignKey("EstatusId")
-                        .HasConstraintName("FK__eTicket__Estatus__20C1E124");
+                    b.HasOne("Ticket.Api.Models.Estatus", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("EstatusId");
 
-                    b.HasOne("Ticket.Api.Models.Prioridades", "Prioridad")
-                        .WithMany("ETickets")
-                        .HasForeignKey("PrioridadId")
-                        .HasConstraintName("FK__eTicket__Priorid__1FCDBCEB");
+                    b.HasOne("Ticket.Api.Models.Prioridades", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("PrioridadesPrioridadId");
 
-                    b.HasOne("Ticket.Api.Models.Sistemas", "Sistema")
-                        .WithMany("ETickets")
-                        .HasForeignKey("SistemaId")
-                        .HasConstraintName("FK__eTicket__Sistema__1DE57479");
+                    b.HasOne("Ticket.Api.Models.Sistemas", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("SistemasSistemaId");
 
-                    b.HasOne("Ticket.Api.Models.Tipos", "Tipo")
-                        .WithMany("ETickets")
-                        .HasForeignKey("TipoId")
-                        .HasConstraintName("FK__eTicket__TipoId__1ED998B2");
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Estatus");
-
-                    b.Navigation("Prioridad");
-
-                    b.Navigation("Sistema");
-
-                    b.Navigation("Tipo");
+                    b.HasOne("Ticket.Api.Models.Tipos", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("TiposTipoId");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Clientes", b =>
                 {
+                    b.Navigation("Respuestas");
+
                     b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Estatus", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Prioridades", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Sistemas", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Ticket.Api.Models.Tickets", b =>
+                {
+                    b.Navigation("Respuestas");
                 });
 
             modelBuilder.Entity("Ticket.Api.Models.Tipos", b =>
                 {
-                    b.Navigation("ETickets");
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

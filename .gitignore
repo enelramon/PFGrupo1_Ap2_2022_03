@@ -3,8 +3,25 @@
 ################################################################################
 
 /Ticket.Api/bin/**
-/Ticket.Api/vs/**
-/Ticket.ApiTests/obj/**
 /Ticket.Api/obj/**
+/Ticket.Api/vs/**
+/Ticket.ApiTests/bin/**
+/Ticket.ApiTests/obj/**
 /.vs/GestionTickets/v17/**
 /.vs/GestionTickets/DesignTimeBuild/**
+/TicketApp/*.iml
+/TicketApp/.gradle
+/TicketApp/local.properties
+/TicketApp/.idea/caches
+/TicketApp/.idea/libraries
+/TicketApp/.idea/modules.xml
+/TicketApp/.idea/workspace.xml
+/TicketApp/.idea/navEditor.xml
+/TicketApp/.idea/assetWizardSettings.xml
+/TicketApp/.DS_Store
+/TicketApp/build
+/TicketApp/captures
+/TicketApp/.externalNativeBuild
+/TicketApp/.cxx
+/TicketApp/local.properties
+

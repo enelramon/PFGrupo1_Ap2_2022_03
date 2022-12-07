@@ -7,7 +7,7 @@ public partial class Tickets
 {
     public int TicketId { get; set; }
 
-    public DateTime? Fecha { get; set; }
+    public DateTime? FechaCreacion { get; set; }
 
     public int? ClienteId { get; set; }
 
@@ -24,14 +24,5 @@ public partial class Tickets
     public DateTime? FechaFinalizado { get; set; }
 
     public int? Orden { get; set; }
-
-    public virtual Clientes? Cliente { get; set; }
-
-    public virtual Estatus? Estatus { get; set; }
-
-    public virtual Prioridades? Prioridad { get; set; }
-
-    public virtual Sistemas? Sistema { get; set; }
-
-    public virtual Tipos? Tipo { get; set; }
+    public virtual ICollection<Respuestas> Respuestas { get; } = new List<Respuestas>();
 }
