@@ -77,8 +77,7 @@ Ademas La opcion  de buscar te permite hacerlo de distintas maneras, ya sea por:
 
 # Video Tutorial de la App
 
-https://youtu.be/tRqONgx280M
-
+https://youtu.be/YW0Br5ntf7A
 
 
 
