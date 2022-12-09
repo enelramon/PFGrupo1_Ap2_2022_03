@@ -42,7 +42,7 @@ donde probra personalizar la aplicacion, ya sea el color o el tema, para que nue
 
 # Funcionalidades
 
-Dentro de las funcionalidades que ofrece nuestra App, esta las Siguientes
+Dentro de las funcionalidades que ofrece nuestra App, estan las Siguientes:
 
 -*Crear Ticker
 
@@ -76,6 +76,9 @@ Ademas La opcion  de buscar te permite hacerlo de distintas maneras, ya sea por:
 ![Filtros](https://user-images.githubusercontent.com/99441207/206365209-26f73758-ad83-4bac-a131-9904900b872b.png)
 
 # Video Tutorial de la App
+
+https://youtu.be/tRqONgx280M
+
 
 
 
