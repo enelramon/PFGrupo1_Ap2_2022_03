@@ -16,14 +16,16 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Sistemas
+        #region INTERNOS
+
+        /* OBTENER TODOS LOS SISTEMAS */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sistemas>>> GetSistemas()
         {
             return await _context.Sistemas.ToListAsync();
         }
 
-        // GET: api/Sistemas/list
+        /* OBTENER SISTEMAS CON MAS TICKETS */
         [HttpGet("/MoreTickets")]
         public async Task<ActionResult<IEnumerable<Sistemas>>> GetSistemasConMasTickets()
         {
@@ -34,7 +36,7 @@ namespace Ticket.Api.Controllers
                 .ToListAsync();
         }
 
-        // GET: api/Sistemas/5
+        /* OBTENER SISTEMA POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Sistemas>> GetSistemas(int id)
         {
@@ -48,8 +50,7 @@ namespace Ticket.Api.Controllers
             return sistemas;
         }
 
-        // PUT: api/Sistemas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* UPDATE SISTEMA */
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSistemas(int id, Sistemas sistemas)
         {
@@ -79,8 +80,7 @@ namespace Ticket.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Sistemas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* CREATE SISTEMA */
         [HttpPost]
         public async Task<ActionResult<Sistemas>> PostSistemas(Sistemas sistemas)
         {
@@ -90,7 +90,7 @@ namespace Ticket.Api.Controllers
             return CreatedAtAction("GetSistemas", new { id = sistemas.SistemaId }, sistemas);
         }
 
-        // DELETE: api/Sistemas/5
+        /* DELETE SISTEMA */
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSistemas(int id)
         {
@@ -105,10 +105,13 @@ namespace Ticket.Api.Controllers
 
             return NoContent();
         }
+        #endregion
 
+        #region UTILS
         private bool SistemasExists(int id)
         {
             return _context.Sistemas.Any(e => e.SistemaId == id);
         }
+        #endregion
     }
 }

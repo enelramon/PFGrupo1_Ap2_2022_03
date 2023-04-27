@@ -21,8 +21,7 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        /*-------- INTERNOS ---------*/
-
+        #region INTERNOS
         /* OBTENER TODOS LOS TICKETS */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tickets>>> GetTickets()
@@ -147,11 +146,13 @@ namespace Ticket.Api.Controllers
 
             return NoContent();
         }
-        
-        /*------ UTILS ------*/
+        #endregion
+
+        #region UTILS
         private bool TicketsExists(int id)
         {
             return _context.Tickets.Any(e => e.TicketId == id);
         }
+        #endregion
     }
 }

@@ -21,14 +21,15 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Prioridades
+        #region INTERNOS
+        /* OBTENER TODAS PRIORIDADES */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Prioridades>>> GetPrioridades()
         {
             return await _context.Prioridades.ToListAsync();
         }
 
-        // GET: api/Prioridades/5
+        /* OBTENER PRIORIDAD POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Prioridades>> GetPrioridades(int id)
         {
@@ -42,5 +43,6 @@ namespace Ticket.Api.Controllers
             return prioridades;
         }
 
+        #endregion
     }
 }

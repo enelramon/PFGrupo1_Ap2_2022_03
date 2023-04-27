@@ -22,8 +22,7 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        /*-------- INTERNOS ---------*/
-
+        #region INTERNOS 
 
         /* OBTENER LOS 5 CLIENTES QUE MAS ME RESPONDEN */
         [HttpGet("Top5Respondidos/{id}")]
@@ -137,6 +136,38 @@ namespace Ticket.Api.Controllers
             return NoContent();
         }
 
+        /* CHANGE PASSWORD */
+        [HttpPut("{id},{password}")]
+        public async Task<IActionResult> ChangePassword(int id, string password)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+
+            if (cliente == null)
+                return NotFound();
+
+            cliente.Clave = password;
+            _context.Entry(cliente).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ClientesExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+
         /* CREATE CLIENTE */
         [HttpPost]
         public async Task<ActionResult<Clientes>> PostClientes(CreateClienteDTO clientes)
@@ -160,9 +191,9 @@ namespace Ticket.Api.Controllers
 
             return CreatedAtAction("GetClientes", new { id = newCliente.ClienteId }, clientes);
         }
+        #endregion
 
-   
-        /*-------- FORANEOS ---------*/
+        #region FORANEOS
 
         /* CAMBIAR CONFIGURACION */
         [HttpPut("ChangeConfig")]
@@ -315,7 +346,9 @@ namespace Ticket.Api.Controllers
             return cliente;
         }
 
-        /*-------- UTILS ---------*/
+        #endregion
+
+        #region UTILS
         private bool ClientesExists(int id)
         {
             return _context.Clientes.Any(e => e.ClienteId == id);
@@ -595,5 +628,7 @@ namespace Ticket.Api.Controllers
             }
             return result;
         }
+        #endregion
+
     }
 }

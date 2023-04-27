@@ -21,14 +21,16 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Estatus
+        #region INTERNOS
+
+        /* OBTENER TODOS LOS ESTATUS */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Estatus>>> GetEstatus()
         {
             return await _context.Estatus.ToListAsync();
         }
 
-        // GET: api/Estatus/5
+        /* OBTENER ESTATUS POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Estatus>> GetEstatus(int id)
         {
@@ -41,11 +43,7 @@ namespace Ticket.Api.Controllers
 
             return estatus;
         }
+        #endregion
 
-
-        private bool EstatusExists(int id)
-        {
-            return _context.Estatus.Any(e => e.EstatusId == id);
-        }
     }
 }

@@ -21,8 +21,9 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
+        #region INTERNOS
 
-        // GET: api/Configuraciones/5
+        /* OBTENER CONFIGURACION POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Configuraciones>> GetConfiguraciones(int id)
         {
@@ -36,7 +37,7 @@ namespace Ticket.Api.Controllers
             return configuraciones;
         }
 
-        // GET: api/Configuraciones/1,2
+        /* OBTENER CONFIGURACION POR PERSONALIZACION */
         [HttpGet("{theme},{colorIndex}")]
         public async Task<ActionResult<Configuraciones>> GetConfiguracion(int theme, int colorIndex)
         {
@@ -49,11 +50,7 @@ namespace Ticket.Api.Controllers
 
             return configuraciones;
         }
+        #endregion
 
-
-        private bool ConfiguracionesExists(int id)
-        {
-            return _context.Configuraciones.Any(e => e.ConfiguracionId == id);
-        }
     }
 }

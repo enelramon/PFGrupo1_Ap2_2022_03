@@ -21,14 +21,15 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Tipos
+        #region INTERNOS
+        /* OBTENER TODOS LOS TIPOS */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tipos>>> GetTipos()
         {
             return await _context.Tipos.ToListAsync();
         }
 
-        // GET: api/Tipos/5
+        /* OBTENER TIPO POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Tipos>> GetTipos(int id)
         {
@@ -41,7 +42,6 @@ namespace Ticket.Api.Controllers
 
             return tipos;
         }
-
-        
+        #endregion        
     }
 }
