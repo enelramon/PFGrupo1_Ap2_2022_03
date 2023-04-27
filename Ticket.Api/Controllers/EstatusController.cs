@@ -42,63 +42,6 @@ namespace Ticket.Api.Controllers
             return estatus;
         }
 
-        // PUT: api/Estatus/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEstatus(int id, Estatus estatus)
-        {
-            if (id != estatus.EstatusId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(estatus).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EstatusExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Estatus
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Estatus>> PostEstatus(Estatus estatus)
-        {
-            _context.Estatus.Add(estatus);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetEstatus", new { id = estatus.EstatusId }, estatus);
-        }
-
-        // DELETE: api/Estatus/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEstatus(int id)
-        {
-            var estatus = await _context.Estatus.FindAsync(id);
-            if (estatus == null)
-            {
-                return NotFound();
-            }
-
-            _context.Estatus.Remove(estatus);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
 
         private bool EstatusExists(int id)
         {

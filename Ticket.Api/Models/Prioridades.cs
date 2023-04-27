@@ -8,6 +8,4 @@ public partial class Prioridades
     public int PrioridadId { get; set; }
 
     public string? Prioridad { get; set; }
-
-    public virtual ICollection<Tickets> Tickets { get; } = new List<Tickets>();
 }

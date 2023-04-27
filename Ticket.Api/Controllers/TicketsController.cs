@@ -21,31 +21,63 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Tickets
+        /*-------- INTERNOS ---------*/
+
+        /* OBTENER TODOS LOS TICKETS */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tickets>>> GetTickets()
         {
-            return await _context.Tickets.ToListAsync();
+            return await _context.Tickets.Include(t => t.Tipo)
+                .Include(t => t.Sistema)
+                .Include(t => t.Prioridad)
+                .Include(t => t.Respuestas)
+                .Include(t => t.Cliente)
+                .Include(t => t.Estatus).ToListAsync();
         }
 
+        /* OBTENER MIS TICKETS */
+        [HttpGet("MyTickets/{id}")]
+        public async Task<ActionResult<IEnumerable<Tickets>>> GetTicketsByClienteId(int id)
+        {
+            return await _context.Tickets
+                .Where(t => t.ClienteId == id)
+                .Include(t => t.Tipo)
+                .Include(t => t.Sistema)
+                .Include(t => t.Prioridad)
+                .Include(t => t.Respuestas)
+                .Include(t => t.Cliente)
+                .Include(t => t.Estatus)
+                .ToListAsync();
+        }
 
-        // GET: api/Tickets/Top5Tickets/1
+        /* OBTENER MIS TOP 5 TICKETS MAS RESPONDIDOS  */
         [HttpGet("Top5Tickets/{id}")]
-        public async Task<ActionResult<IEnumerable<Tickets>>> GetTicketsByClientId(int id)
+        public async Task<ActionResult<IEnumerable<Tickets>>> Get5TicketsByClientId(int id)
         {
             //5 tickets con mas respuestas
             return await _context.Tickets.
                 Where(t => t.ClienteId==id).
-                OrderBy(t=>t.Respuestas.Count).
+                OrderBy(t=>t.Respuestas.Count)
+                .Include(t => t.Tipo)
+                .Include(t => t.Sistema)
+                .Include(t => t.Prioridad)
+                .Include(t => t.Respuestas)
+                .Include(t => t.Cliente)
+                .Include(t => t.Estatus).
                 Take(5).
                 ToListAsync();
         }
 
-        // GET: api/Tickets/5
+        /* OBTENER TICKET POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Tickets>> GetTickets(int id)
         {
-            var tickets = await _context.Tickets.FindAsync(id);
+            var tickets = await _context.Tickets.Where(t => t.TicketId == id).Include(t => t.Tipo)
+                .Include(t => t.Sistema)
+                .Include(t => t.Prioridad)
+                .Include(t => t.Respuestas)
+                .Include(t => t.Cliente)
+                .Include(t => t.Estatus).FirstOrDefaultAsync();
 
             if (tickets == null)
             {
@@ -55,8 +87,7 @@ namespace Ticket.Api.Controllers
             return tickets;
         }
 
-        // PUT: api/Tickets/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* UPDATE TICKET */
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTickets(int id, Tickets tickets)
         {
@@ -86,18 +117,22 @@ namespace Ticket.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Tickets
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* CREATE TICKET */
         [HttpPost]
         public async Task<ActionResult<Tickets>> PostTickets(Tickets tickets)
         {
+            var cliente = await _context.Clientes.AsNoTracking().FirstOrDefaultAsync(t => t.ClienteId == tickets.ClienteId);
+
+            if (cliente == null)
+                return NotFound();
+
             _context.Tickets.Add(tickets);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTickets", new { id = tickets.TicketId }, tickets);
         }
 
-        // DELETE: api/Tickets/5
+        /* DELETE TICKET */
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTickets(int id)
         {
@@ -112,7 +147,8 @@ namespace Ticket.Api.Controllers
 
             return NoContent();
         }
-
+        
+        /*------ UTILS ------*/
         private bool TicketsExists(int id)
         {
             return _context.Tickets.Any(e => e.TicketId == id);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ticket.Api.DAL;
 using Ticket.Api.Models;
+using Ticket.Api.Models.DTO;
 
 namespace Ticket.Api.Controllers
 {
@@ -21,55 +22,63 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Clientes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Clientes>>> GetClientes()
-        {
-            return await _context.Clientes.ToListAsync();
-        }
+        /*-------- INTERNOS ---------*/
 
-        //Ellos a mi
-        // GET: api/Clientes/Top5Respondidos/2
+
+        /* OBTENER LOS 5 CLIENTES QUE MAS ME RESPONDEN */
         [HttpGet("Top5Respondidos/{id}")]
         public async Task<ActionResult<IEnumerable<Clientes>>> GetClientesRespondidos(int id)
         {
-            var lista =  (
+            var lista = (
                 from c in _context.Clientes
                 join r in _context.Respuestas on c.ClienteId equals r.ClienteId
                 from t in _context.Tickets
-                where t.ClienteId == id && r.TicketId == t.TicketId 
-                orderby (c.Respuestas.Where(r2=>r2.TicketId==t.TicketId).Count())
+                where t.ClienteId == id && r.TicketId == t.TicketId
+                orderby (c.Respuestas.Where(r2 => r2.TicketId == t.TicketId).Count())
                 select c
                          )
                          .Take(5)
+                         .Distinct()
+                         .Include(c => c.Configuracion)
+                         .Include(c => c.Tickets)
+                         .Include(c => c.Respuestas)
                          .ToListAsync();
             return await lista;
 
         }
 
-        // GET: api/Clientes/Top5ContestadosPorMi/2
+        /* OBTENER LOS 5 CLIENTES QUE MAS LE RESPONDO */
         [HttpGet("TopRespondidosPor_Mi/{id}")]
         public async Task<ActionResult<IEnumerable<Clientes>>> GetClientesRespondidosPor_Mi(int id)
         {
             var lista = (
                 from c in _context.Clientes
-                join r in _context.Respuestas on id equals r.ClienteId 
+                join r in _context.Respuestas on id equals r.ClienteId
                 from t in _context.Tickets
                 where t.ClienteId == c.ClienteId && r.TicketId == t.TicketId
                 orderby (c.Respuestas.Where(r2 => r2.TicketId == t.TicketId).Count())
-                select c
-                         )
+                select c)
                          .Take(5)
+                         .Distinct()
+                         .Include(c => c.Configuracion)
+                         .Include(c => c.Tickets)
+                         .Include(c => c.Respuestas)
                          .ToListAsync();
+
             return await lista;
 
         }
 
-        // GET: api/Clientes/5
+        /* OBTENER CLIENTE POR ID */
         [HttpGet("{id}")]
         public async Task<ActionResult<Clientes>> GetClientes(int id)
         {
-            var clientes = await _context.Clientes.FindAsync(id);
+            var clientes = await _context.Clientes
+                .Where(c => c.ClienteId == id)
+                .Include(c => c.Tickets)
+                .Include(c => c.Respuestas)
+                .Include(c => c.Configuracion)
+                .FirstOrDefaultAsync();
 
             if (clientes == null)
             {
@@ -78,20 +87,17 @@ namespace Ticket.Api.Controllers
 
             return clientes;
         }
-        // GET: api/Clientes/nombre,clave
+
+        /* OBTENER CLIENTE POR USER Y CLAVE */
         [HttpGet("{nombre},{clave}")]
         public async Task<ActionResult<Clientes>> GetCliente(string nombre, string clave)
         {
-            string decryptedClave = "";
             string decryptedNombre = "";
-
-            foreach (var letra in clave)
-                decryptedClave += CharacterDecrypter(letra);
 
             foreach (var letra in nombre)
                 decryptedNombre += CharacterDecrypter(letra);
 
-            var clientes = await _context.Clientes.FirstOrDefaultAsync(c => c.Nombres.Equals(decryptedNombre) && c.Clave.Equals(decryptedClave));
+            var clientes = await _context.Clientes.FirstOrDefaultAsync(c => c.Nombres.Equals(decryptedNombre) && c.Clave.Equals(clave));
 
             if (clientes == null)
             {
@@ -101,8 +107,7 @@ namespace Ticket.Api.Controllers
             return clientes;
         }
 
-        // PUT: api/Clientes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* UPDATE CLIENTE */
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClientes(int id, Clientes clientes)
         {
@@ -132,33 +137,185 @@ namespace Ticket.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* CREATE CLIENTE */
         [HttpPost]
-        public async Task<ActionResult<Clientes>> PostClientes(Clientes clientes)
+        public async Task<ActionResult<Clientes>> PostClientes(CreateClienteDTO clientes)
         {
-            _context.Clientes.Add(clientes);
+            var config = await _context.Configuraciones.FindAsync(clientes.ConfiguracionId);
+            if (config == null)
+                return NotFound();
+
+
+
+            var newCliente = new Clientes
+            {
+                Nombres = clientes.Nombres,
+                Clave = clientes.Clave,
+                ConfiguracionId = clientes.ConfiguracionId,
+                Configuracion = config
+            };
+            _context.Clientes.Add(newCliente);
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetClientes", new { id = clientes.ClienteId }, clientes);
+            return CreatedAtAction("GetClientes", new { id = newCliente.ClienteId }, clientes);
         }
 
-        // DELETE: api/Clientes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClientes(int id)
-        {
-            var clientes = await _context.Clientes.FindAsync(id);
-            if (clientes == null)
-            {
-                return NotFound();
-            }
+   
+        /*-------- FORANEOS ---------*/
 
-            _context.Clientes.Remove(clientes);
-            await _context.SaveChangesAsync();
+        /* CAMBIAR CONFIGURACION */
+        [HttpPut("ChangeConfig")]
+        public async Task<IActionResult> ChangeConfig(ChangeConfigDTO config)
+        {
+            var configuraciones = await _context.Configuraciones.FirstOrDefaultAsync(c => c.Theme == config.ThemeIndex && c.ColorSchemeIndex == config.ColorScheme);
+            if (configuraciones == null)
+                return NotFound();
+
+            var clientes = await _context.Clientes.FindAsync(config.ClienteId);
+            if (clientes == null)
+                return BadRequest();
+
+            clientes.Configuracion = configuraciones;
+            clientes.ConfiguracionId = configuraciones.ConfiguracionId;
+            _context.Entry(clientes).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ClientesExists(config.ClienteId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
 
+        /* AGREGAR TICKET */
+        [HttpPost("AddTicket")]
+        public async Task<ActionResult<Clientes>> AddTicket(AddTicketDTO ticketDto)
+        {
+            var cliente = await _context.Clientes
+                .Where(c => c.ClienteId == ticketDto.ClienteId)
+                .Include(c => c.Configuracion)
+                .FirstOrDefaultAsync();
+
+            if (cliente == null)
+                return NotFound();
+
+            var sistema = await _context.Sistemas.FindAsync(ticketDto.SistemaId);
+            if (sistema == null)
+                return NotFound();
+
+            var tipo = await _context.Tipos.FindAsync(ticketDto.TipoId);
+            if (tipo == null)
+                return NotFound();
+
+            var prioridad = await _context.Prioridades.FindAsync(ticketDto.PrioridadId);
+            if (prioridad == null)
+                return NotFound();
+
+            var estatus = await _context.Estatus.FindAsync(1);
+            if (estatus == null)
+                return NotFound();
+
+            var newTicket = new Tickets
+            {
+                ClienteId = ticketDto.ClienteId,
+                Cliente = cliente,
+                SistemaId = ticketDto.SistemaId,
+                Sistema = sistema,
+                TipoId = ticketDto.TipoId,
+                Tipo = tipo,
+                PrioridadId = ticketDto.PrioridadId,
+                Prioridad = prioridad,
+                EstatusId = 1,
+                Estatus = estatus,
+                Especificaciones = ticketDto.Especificaciones
+            };
+            _context.Add(newTicket);
+
+            await _context.SaveChangesAsync();
+
+            return cliente;
+        }
+
+        /* CERRAR TICKET */
+        [HttpPost("CloseTicket/{ticketId}")]
+        public async Task<ActionResult<Clientes>> CloseTicket(int ticketId)
+        {
+
+            var ticket = await _context.Tickets.Where(t => t.TicketId == ticketId).FirstOrDefaultAsync();
+
+            if (ticket == null) return NotFound();
+
+            var cliente = await _context.Clientes
+                .Where(c => c.ClienteId == ticket.ClienteId)
+                .Include(c => c.Configuracion)
+                .FirstOrDefaultAsync();
+
+            if (cliente == null)
+                return NotFound();
+
+            var estatus = await _context.Estatus.FindAsync(3);
+            if (estatus == null) return NotFound();
+
+            ticket.Estatus = estatus;
+            ticket.EstatusId = 3;
+
+            ticket.FechaFinalizado = DateTime.Now;
+            _context.Entry(ticket).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return cliente;
+        }
+
+        /* RESPONDER TICKET (agregar respuesta) */
+        [HttpPost("ReplyTicket")]
+        public async Task<ActionResult<Clientes>> ReplyTicket(AddRespuestaDTO respuesta)
+        {
+
+            var ticket = await _context.Tickets
+                .Where(t => t.TicketId == respuesta.TicketId)
+                .Include(t => t.Respuestas)
+                .FirstOrDefaultAsync();
+
+            if (ticket == null) return NotFound();
+
+            var cliente = await _context.Clientes
+                .Where(c => c.ClienteId == respuesta.ClienteId)
+                .Include(c => c.Configuracion)
+                .FirstOrDefaultAsync();
+
+            if (cliente == null) return NotFound();
+
+            var newRespuesta = new Respuestas
+            {
+                Contenido = respuesta.Contenido,
+                Cliente = cliente,
+                ClienteId = respuesta.ClienteId,
+                Ticket = ticket,
+                TicketId = respuesta.TicketId
+            };
+
+
+            _context.Add(newRespuesta);
+
+            await _context.SaveChangesAsync();
+
+            return cliente;
+        }
+
+        /*-------- UTILS ---------*/
         private bool ClientesExists(int id)
         {
             return _context.Clientes.Any(e => e.ClienteId == id);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ticket.Api.DAL;
 using Ticket.Api.Models;
@@ -33,7 +28,8 @@ namespace Ticket.Api.Controllers
         public async Task<ActionResult<IEnumerable<Sistemas>>> GetSistemasConMasTickets()
         {
             return await _context.Sistemas
-                .OrderBy(s => s.Tickets.Count())
+                .Include(s => s.Tickets)
+                .OrderByDescending(s => s.Tickets.Count())
                 .Take(5)
                 .ToListAsync();
         }
@@ -42,7 +38,7 @@ namespace Ticket.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Sistemas>> GetSistemas(int id)
         {
-            var sistemas = await _context.Sistemas.FindAsync(id);
+            var sistemas = await _context.Sistemas.Where(s => s.SistemaId == id).Include(s => s.Tickets).FirstOrDefaultAsync();
 
             if (sistemas == null)
             {

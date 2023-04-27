@@ -21,18 +21,47 @@ namespace Ticket.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Respuestas
+        /*-------- INTERNOS ---------*/
+
+        /* OBTENER TODAS LAS RESPUESTAS */
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Respuestas>>> GetRespuestas()
         {
-            return await _context.Respuestas.ToListAsync();
+            return await _context.Respuestas
+                .Include(r => r.Cliente)
+                .Include(r => r.Ticket)
+                .ToListAsync();
         }
 
-        // GET: api/Respuestas/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Respuestas>> GetRespuestas(int id)
+        /* OBTENER TODAS LAS RESPUESTAS DE UN CLIENTE */
+        [HttpGet("ByClienteId/{clienteId}")]
+        public async Task<ActionResult<IEnumerable<Respuestas>>> GetUserRespuestas(int clienteId)
         {
-            var respuestas = await _context.Respuestas.FindAsync(id);
+            return await _context.Respuestas
+                .Where(r => r.ClienteId == clienteId)
+                .Include(r => r.Cliente)
+                .Include(r => r.Ticket)
+                .ToListAsync();
+        }
+
+        /* OBTENER TODAS LAS RESPUESTAS DE UN TICKET */
+        [HttpGet("ByTicketId/{ticketId}")]
+        public async Task<ActionResult<IEnumerable<Respuestas>>> GetTicketRespuestas(int ticketId)
+        {
+            return await _context.Respuestas
+                .Where(r => r.TicketId == ticketId)
+                .Include(r => r.Cliente)
+                .Include(r => r.Ticket)
+                .ToListAsync();
+        }
+
+        /* OBTENER 1 RESPUESTA POR ID */
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Respuestas>> GetRespuesta(int id)
+        {
+            var respuestas = await _context.Respuestas
+                .Include(r => r.Cliente)
+                .Include(r => r.Ticket).FirstOrDefaultAsync(r => r.RespuestaId == id);
 
             if (respuestas == null)
             {
@@ -42,8 +71,7 @@ namespace Ticket.Api.Controllers
             return respuestas;
         }
 
-        // PUT: api/Respuestas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* UPDATE RESPUESTA */
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRespuestas(int id, Respuestas respuestas)
         {
@@ -73,8 +101,7 @@ namespace Ticket.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Respuestas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* CREATE RESPUESTA */
         [HttpPost]
         public async Task<ActionResult<Respuestas>> PostRespuestas(Respuestas respuestas)
         {
@@ -84,7 +111,7 @@ namespace Ticket.Api.Controllers
             return CreatedAtAction("GetRespuestas", new { id = respuestas.RespuestaId }, respuestas);
         }
 
-        // DELETE: api/Respuestas/5
+        /* DELETE RESPUESTA */
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRespuestas(int id)
         {
@@ -100,6 +127,8 @@ namespace Ticket.Api.Controllers
             return NoContent();
         }
 
+
+        /*-------- UTILS ---------*/
         private bool RespuestasExists(int id)
         {
             return _context.Respuestas.Any(e => e.RespuestaId == id);

@@ -31,9 +31,9 @@ public partial class TicketDbContext : DbContext
 
         builder.Entity<Tickets>(entity =>
         {
-            entity.HasKey(e => e.TicketId).HasName("PK__eTicket__712CC6070A90FFD9");
+            entity.HasKey(e => e.TicketId).HasName("PK__Tickets__712CC6070A90FFD9");
 
-            entity.ToTable("eTicket");
+            entity.ToTable("Tickets");
 
             entity.Property(e => e.Especificaciones).IsUnicode(false);
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -47,7 +47,7 @@ public partial class TicketDbContext : DbContext
 
             entity.ToTable("Estatus");
 
-            entity.Property(e => e.Estatus1)
+            entity.Property(e => e.Estado)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Estatus");
@@ -84,16 +84,15 @@ public partial class TicketDbContext : DbContext
 
         builder.Entity<Clientes>().HasData(new[]
         {
-            new Clientes {ClienteId=1,ConfiguracionId=13,Clave="Samuel23",Nombres="Samuel"},
-            new Clientes {ClienteId=2,ConfiguracionId=13,Clave="Rafa23",Nombres="Rafa"},
-            new Clientes {ClienteId=3,ConfiguracionId=13,Clave="Jeison23",Nombres="Jeison"},
-            new Clientes {ClienteId=4,ConfiguracionId=13,Clave="Enel23",Nombres="Enel"},
+            new Clientes {ClienteId=1,ConfiguracionId=13,Clave="xtZTnA23",Nombres="Samuel"},
+            new Clientes {ClienteId=2,ConfiguracionId=13,Clave="atDt23",Nombres="Rafa"},
+            new Clientes {ClienteId=3,ConfiguracionId=13,Clave="mnQOJv23",Nombres="Jeison"}
         });
         builder.Entity<Estatus>().HasData(new[]
         {
-            new Estatus {EstatusId=1,Estatus1 = "Nuevo"},
-            new Estatus {EstatusId=2,Estatus1 = "En proceso"},
-            new Estatus {EstatusId=3,Estatus1 = "Cerrado"},
+            new Estatus {EstatusId=1,Estado = "Nuevo"},
+            new Estatus {EstatusId=2,Estado = "En proceso"},
+            new Estatus {EstatusId=3,Estado = "Cerrado"},
         });
         builder.Entity<Prioridades>().HasData(new[]
         {
@@ -105,16 +104,25 @@ public partial class TicketDbContext : DbContext
         });
         builder.Entity<Sistemas>().HasData(new[]
         {
-            new Sistemas{SistemaId=1, Sistema="Ventas SS"},
-            new Sistemas{SistemaId=2, Sistema="SS Office"},
-            new Sistemas{SistemaId=3, Sistema="SS Rent Reporter"},
+            new Sistemas{SistemaId=1, Sistema="Auto System Gym"},
+            new Sistemas{SistemaId=2, Sistema="Auto System Office"},
+            new Sistemas{SistemaId=3, Sistema="Auto System Finanzas"},
+            new Sistemas{SistemaId=4, Sistema="Auto System Ventas"},
+            new Sistemas{SistemaId=5, Sistema="Auto System Produccion"},
+            new Sistemas{SistemaId=6, Sistema="Auto System Analyzer"},
+            new Sistemas{SistemaId=7, Sistema="Auto System Dealer"},
+            new Sistemas{SistemaId=8, Sistema="Auto System Education"},
+            new Sistemas{SistemaId=9, Sistema="Auto System Restaurant"},
         });
         builder.Entity<Tipos>().HasData(new[]
         {
-            new Tipos {TipoId=1,Tipo="Problemas"},
-            new Tipos {TipoId=2,Tipo="Sugerencia"},
-            new Tipos {TipoId=3,Tipo="Soporte Directo"},
-            new Tipos {TipoId=4,Tipo="Otros"}
+            new Tipos {TipoId=1,Tipo="Agregar opcion nueva"},
+            new Tipos {TipoId=2,Tipo="Soporte sobre opcion existente"},
+            new Tipos {TipoId=3,Tipo="Instalacion de software"},
+            new Tipos {TipoId=4,Tipo="Solicitud de visita"},
+            new Tipos {TipoId=5,Tipo="Solicitud de entrenamiento"},
+            new Tipos {TipoId=6,Tipo="Soporte de hardware"},
+            new Tipos {TipoId=7,Tipo="Otros"}
         });
         builder.Entity<Configuraciones>().HasData(new[]
         {
@@ -124,18 +132,20 @@ public partial class TicketDbContext : DbContext
             new Configuraciones {ConfiguracionId=4,Theme=0, ColorSchemeIndex=3},//Light & Amarillo
             new Configuraciones {ConfiguracionId=5,Theme=0, ColorSchemeIndex=4},//Light & naranja
             new Configuraciones {ConfiguracionId=6,Theme=0, ColorSchemeIndex=5},//Light & Rojo
-            new Configuraciones {ConfiguracionId=7,Theme=1, ColorSchemeIndex=0},//Dark & Purpura
-            new Configuraciones {ConfiguracionId=8,Theme=1, ColorSchemeIndex=1},//Dark & verde
-            new Configuraciones {ConfiguracionId=9,Theme=1, ColorSchemeIndex=2},//Dark & azul
+
+            new Configuraciones {ConfiguracionId=7,Theme=1, ColorSchemeIndex=0}, //Dark & Purpura
+            new Configuraciones {ConfiguracionId=8,Theme=1, ColorSchemeIndex=1}, //Dark & verde
+            new Configuraciones {ConfiguracionId=9,Theme=1, ColorSchemeIndex=2}, //Dark & azul
             new Configuraciones {ConfiguracionId=10,Theme=1, ColorSchemeIndex=3},//Dark & amarillo
             new Configuraciones {ConfiguracionId=11,Theme=1, ColorSchemeIndex=4},//Dark & naranja
             new Configuraciones {ConfiguracionId=12,Theme=1, ColorSchemeIndex=5},//Dark & rojo
+
             new Configuraciones {ConfiguracionId=13,Theme=2, ColorSchemeIndex=0},//System & Purpura
             new Configuraciones {ConfiguracionId=14,Theme=2, ColorSchemeIndex=1},//System & verde
             new Configuraciones {ConfiguracionId=15,Theme=2, ColorSchemeIndex=2},//System & azul
             new Configuraciones {ConfiguracionId=16,Theme=2, ColorSchemeIndex=3},//System & amarillo
             new Configuraciones {ConfiguracionId=17,Theme=2, ColorSchemeIndex=4},//System & naranja
-            new Configuraciones {ConfiguracionId=18  ,Theme=2, ColorSchemeIndex=5},//System & rojo
+            new Configuraciones {ConfiguracionId=18,Theme=2, ColorSchemeIndex=5},//System & rojo
         });
 
         OnModelCreatingPartial(builder);
